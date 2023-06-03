@@ -9,8 +9,7 @@ from commands import (
     change_phone_number_contact,
     add_email_to_contact,
     change_email_contact,
-    add_birthday_to_contact,
-    change_birthday_contact       
+    add_birthday_to_contact   
 )
 
 
@@ -67,8 +66,7 @@ def main():
             elif arguments.email and arguments.replace:
                 change_email_contact(contact_book, arguments.name, arguments.replace, arguments.email)
             elif arguments.birthday:
-                add_birthday_to_contact(contact_book, arguments.name, arguments.birthday)
-        print(contact_book)            
+                add_birthday_to_contact(contact_book, arguments.name, arguments.birthday)        
                 
         print('Ми маємо аргументи')
         print(arguments)
