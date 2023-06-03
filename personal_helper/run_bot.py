@@ -9,7 +9,12 @@ from commands import (
     change_phone_number_contact,
     add_email_to_contact,
     change_email_contact,
-    add_birthday_to_contact   
+    add_birthday_to_contact,
+    delete_phone_number_contact,
+    delete_email_contact,
+    delete_contact,
+    print_contacts,
+    print_contact   
 )
 
 
@@ -21,7 +26,7 @@ def build_parser(arguments: str):
     parser.add_argument("-b", dest="birthday")
     parser.add_argument("-r", dest="replace")
     parser.add_argument("-d", dest="delete_phone")
-    parser.add_argument("-a", dest="all")
+    parser.add_argument("-a", dest="show")
     parser.add_argument("-s", dest="search")
     args = parser.parse_args(arguments.split())
     return args
@@ -66,7 +71,20 @@ def main():
             elif arguments.email and arguments.replace:
                 change_email_contact(contact_book, arguments.name, arguments.replace, arguments.email)
             elif arguments.birthday:
-                add_birthday_to_contact(contact_book, arguments.name, arguments.birthday)        
+                add_birthday_to_contact(contact_book, arguments.name, arguments.birthday)      
+        elif command == 'del':
+            if arguments.name and arguments.phone:
+                delete_phone_number_contact(contact_book, arguments.name, arguments.phone)
+            elif arguments.name and arguments.email:
+                delete_email_contact(contact_book, arguments.name, arguments.email)
+            elif arguments.name and not arguments.email and not arguments.phone:
+                delete_contact(contact_book, arguments.name)
+        elif command == 'show':
+            if arguments.show == 'all':
+                print_contacts(contact_book)
+            elif arguments.show:
+                print_contact(contact_book, arguments.show)
+                
                 
         print('Ми маємо аргументи')
         print(arguments)
