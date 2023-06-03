@@ -1,9 +1,5 @@
-"""commands"""
-
-from prettytable import PrettyTable
-
-from personal_helper.utils import sanitize_phone_number
-from personal_helper.validation import (
+from utils import sanitize_phone_number
+from validation import (
     verify_name,
     verify_phone,
     verify_email,
@@ -16,9 +12,9 @@ from personal_helper.validation import (
     check_email_in_address_book,
     check_email_not_in_address_book,
 )
-from personal_helper.constants import (NUMBER_OF_CONTACTS_PER_PAGE, FILE)
-from personal_helper.address_book import Record, AddressBook as AB
-from personal_helper.entities import Phone, User, Email
+from constants import (NUMBER_OF_CONTACTS_PER_PAGE, FILE)
+from address_book import Record, AddressBook as AB
+from entities import Phone, User, Email
 
 
 def add_contact(addressbook: AB,
@@ -285,28 +281,28 @@ def add_birthday_to_contact(addressbook: AB,
     print(
         f"The birthday '{birthday_date}' has been added to the '{contact_name.title()}' contact.")
 
-
-def change_birthday_contact(addressbook: AB,
-                            contact_name: str,
-                            new_birthday_date: str) -> None:
-    """
-    The change_birthday_contact function changes the birthday date of a contact in an address book.
+# РОЗГЛЯНУТИ ВИДАЛЕННЯ add_birthday_to_contact достатньо.
+# def change_birthday_contact(addressbook: AB,
+#                             contact_name: str,
+#                             new_birthday_date: str) -> None:
+#     """
+#     The change_birthday_contact function changes the birthday date of a contact in an address book.
     
-    :param addressbook: AB: Pass in the addressbook object to the function\n
-    :param contact_name: str: Specify the name of the contact whose birthday date is to be changed\n
-    :param new_birthday_date: str: Pass the new birthday date to the function
-    """
-    contact_name = contact_name.lower()
-    check_name_not_in_address_book(addressbook, contact_name)
+#     :param addressbook: AB: Pass in the addressbook object to the function\n
+#     :param contact_name: str: Specify the name of the contact whose birthday date is to be changed\n
+#     :param new_birthday_date: str: Pass the new birthday date to the function
+#     """
+#     contact_name = contact_name.lower()
+#     check_name_not_in_address_book(addressbook, contact_name)
 
-    contact = addressbook.get_contact(contact_name)
+#     contact = addressbook.get_contact(contact_name)
 
-    verify_birthday_date(new_birthday_date)
-    contact.add_birthday(new_birthday_date)
+#     verify_birthday_date(new_birthday_date)
+#     contact.add_birthday(new_birthday_date)
 
-    addressbook.add_record(contact)
-    addressbook.save_records_to_file(FILE)
-    print(f"The birthday date for '{contact_name.title()}' has been changed to '{new_birthday_date}'.")
+#     addressbook.add_record(contact)
+#     addressbook.save_records_to_file(FILE)
+#     print(f"The birthday date for '{contact_name.title()}' has been changed to '{new_birthday_date}'.")
 
 
 def serch_contact(addressbook: AB, criteria: str) -> None:

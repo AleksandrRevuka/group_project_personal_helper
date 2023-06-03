@@ -4,10 +4,10 @@ import re
 from string import digits
 from datetime import datetime
 
-from personal_helper.error import input_error
-from personal_helper.constants import LETTERS, NAME_RANGE, PHONE_RANGE
-from personal_helper.address_book import Record, AddressBook as AB
-from personal_helper.entities import Phone, Email
+from error import input_error
+from constants import LETTERS, NAME_RANGE, PHONE_RANGE
+from address_book import Record, AddressBook as AB
+from entities import Phone, Email
 
 
 @input_error
