@@ -79,7 +79,7 @@ def delete_contact(addressbook: AB, contact_name: str) -> None:
 
     addressbook.delete_record(contact_name)
     addressbook.save_records_to_file(FILE)
-    print(f"The contact '{contact_name.title()}' has been deleted.")
+    print(f"The contact '{contact_name}' has been deleted.")
 
 
 def add_phone_number_to_contact(addressbook: AB, contact_name: str, phone_number: str) -> None:
@@ -104,7 +104,7 @@ def add_phone_number_to_contact(addressbook: AB, contact_name: str, phone_number
     contact.add_phone_number(phone)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The phone number '{phone.phone}' has been successfully added to the '{contact_name.title()}' contact.")
+        f"The phone number '{phone.phone}' has been successfully added to the '{contact_name}' contact.")
 
 
 def change_phone_number_contact(addressbook: AB,
@@ -139,7 +139,7 @@ def change_phone_number_contact(addressbook: AB,
     addressbook.add_record(contact)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The contact '{contact_name.title()}' has been updated with the new phone number: {new_phone.phone}")
+        f"The contact '{contact_name}' has been updated with the new phone number: {new_phone.phone}")
 
 
 def delete_phone_number_contact(addressbook: AB,
@@ -164,7 +164,7 @@ def delete_phone_number_contact(addressbook: AB,
     contact.delete_phone_number(phone)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The phone number '{phone.phone}' was successfully deleted from the '{contact_name.title()}' contact.")
+        f"The phone number '{phone.phone}' was successfully deleted from the '{contact_name}' contact.")
 
 
 def add_email_to_contact(addressbook: AB,
@@ -191,7 +191,7 @@ def add_email_to_contact(addressbook: AB,
     contact.add_email(email)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The email '{email.email}' has been successfully added to the '{contact_name.title()}' contact.")
+        f"The email '{email.email}' has been successfully added to the '{contact_name}' contact.")
 
 
 def change_email_contact(addressbook: AB,
@@ -230,7 +230,7 @@ def change_email_contact(addressbook: AB,
     contact.change_email(old_email, new_email)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The contact '{contact_name.title()}' has been updated with the new email: {new_email.email}")
+        f"The contact '{contact_name}' has been updated with the new email: {new_email.email}")
 
 
 def delete_email_contact(addressbook: AB,
@@ -255,7 +255,7 @@ def delete_email_contact(addressbook: AB,
     contact.delete_email(email)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The email '{email.email}' was successfully deleted from the '{contact_name.title()}' contact.")
+        f"The email '{email.email}' was successfully deleted from the '{contact_name}' contact.")
 
 
 def add_birthday_to_contact(addressbook: AB,
@@ -279,30 +279,7 @@ def add_birthday_to_contact(addressbook: AB,
     addressbook.add_record(contact)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The birthday '{birthday_date}' has been added to the '{contact_name.title()}' contact.")
-
-# РОЗГЛЯНУТИ ВИДАЛЕННЯ add_birthday_to_contact достатньо.
-# def change_birthday_contact(addressbook: AB,
-#                             contact_name: str,
-#                             new_birthday_date: str) -> None:
-#     """
-#     The change_birthday_contact function changes the birthday date of a contact in an address book.
-    
-#     :param addressbook: AB: Pass in the addressbook object to the function\n
-#     :param contact_name: str: Specify the name of the contact whose birthday date is to be changed\n
-#     :param new_birthday_date: str: Pass the new birthday date to the function
-#     """
-#     contact_name = contact_name.lower()
-#     check_name_not_in_address_book(addressbook, contact_name)
-
-#     contact = addressbook.get_contact(contact_name)
-
-#     verify_birthday_date(new_birthday_date)
-#     contact.add_birthday(new_birthday_date)
-
-#     addressbook.add_record(contact)
-#     addressbook.save_records_to_file(FILE)
-#     print(f"The birthday date for '{contact_name.title()}' has been changed to '{new_birthday_date}'.")
+        f"The birthday '{birthday_date}' has been added to the '{contact_name}' contact.")
 
 
 def serch_contact(addressbook: AB, criteria: str) -> None:
