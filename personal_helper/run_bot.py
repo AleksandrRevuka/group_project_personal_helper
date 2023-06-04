@@ -1,8 +1,30 @@
+"""
+This module provides a command-line interface for managing a contact book. It allows users to perform various operations
+such as adding contacts, modifying contact information, deleting contacts, and displaying contact details.
+
+The module consists of the following components:
+- `address_book`: Contains the `AddressBook` class that represents the contact book.
+- `constants`: Defines constants used in the module.
+- `commands`: Provides functions for executing different commands on the contact book.
+- `build_parser`: Defines a function for parsing command-line arguments using `argparse`.
+- `command_parser`: Implements a function for parsing user commands and extracting command names and arguments.
+- `load_contact_book`: Loads the contact book from a file or creates an empty contact book if the file doesn't exist.
+- `main`: The main function that processes user commands and executes the corresponding operations.
+
+To run the module, execute the script `run_bot.py` with appropriate command-line arguments.
+
+Example usage:
+    $ python run_bot.py add -n John -p 380634567890
+    $ python run_bot.py change -n John -p 380991234567 -r 380634567890
+    $ python run_bot.py del -n John
+"""
+
 import argparse
 from sys import argv
 import os.path
 
 from address_book import AddressBook
+from constants import FILE
 from commands import (
     add_contact,
     add_phone_number_to_contact,
@@ -14,11 +36,16 @@ from commands import (
     delete_email_contact,
     delete_contact,
     print_contacts,
-    print_contact   
+    print_contact
 )
 
 
-def build_parser(arguments: str):
+def build_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
     parser = argparse.ArgumentParser(description="Contact book")
     parser.add_argument("-n", dest="name")
     parser.add_argument("-p", dest="phone")
@@ -32,32 +59,45 @@ def build_parser(arguments: str):
     return args
 
 
-def command_parser(user_command: str):
+def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
+    """
+    The command_parser function takes a user command as input and returns the
+    command name and arguments. The function first splits the user command into
+    a list of elements, where each element is separated by a space. If there are no
+    arguments, then it returns only the command name (the first element in the list). 
+    If there are arguments, then it uses argparse to parse them into an object that can be used later.
+    """
     command_elements = user_command.split(' ')
     if len(command_elements) < 2:
         arguments = None
         return command_elements[0], arguments
-    else:
-        arguments = user_command.split(' ', 1)[1]
-        parsed_args = build_parser(arguments)
-        return command_elements[0], parsed_args
-    
 
-def load_contact_book():
+    arguments = user_command.split(' ', 1)[1]
+    parsed_args = build_parser(arguments)
+    return command_elements[0], parsed_args
+
+
+def load_contact_book() -> AddressBook:
+    """
+    The load_contact_book function loads the contact book from a file.
+    If the file does not exist, it creates an empty contact book.
+    """
     contact_book = AddressBook()
-    if os.path.exists('Address_Book.bin'):
-        contact_book.read_records_from_file('address_book.bin')
+    if os.path.exists(FILE):
+        contact_book.read_records_from_file(FILE)
     return contact_book
-    
 
-def main():
+
+def main() -> None:
+    """
+    The main function of the program.
+    """
     contact_book = load_contact_book()
-    # Забираєм аліас самого бота
     user_command = ' '.join(argv[1:])
     command, arguments = command_parser(user_command)
     if not arguments:
-        
-        print('Команди без аргументів або помилка')
+
+        print('Commands without arguments or error')
     else:
         if command == 'add':
             add_contact(contact_book, arguments.name, arguments.phone)
@@ -71,7 +111,7 @@ def main():
             elif arguments.email and arguments.replace:
                 change_email_contact(contact_book, arguments.name, arguments.replace, arguments.email)
             elif arguments.birthday:
-                add_birthday_to_contact(contact_book, arguments.name, arguments.birthday)      
+                add_birthday_to_contact(contact_book, arguments.name, arguments.birthday)
         elif command == 'del':
             if arguments.name and arguments.phone:
                 delete_phone_number_contact(contact_book, arguments.name, arguments.phone)
@@ -84,12 +124,10 @@ def main():
                 print_contacts(contact_book)
             elif arguments.show:
                 print_contact(contact_book, arguments.show)
-                
-                
-        print('Ми маємо аргументи')
+
+        print('We have arguments')
         print(arguments)
 
 
 if __name__ == '__main__':
     main()
-    
