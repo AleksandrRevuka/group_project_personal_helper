@@ -21,37 +21,6 @@ Example usage:
 
 
 
-def get_validation_commands(commands: list, target_command: str) -> dict:
-    result = {}
-
-    for command in commands:
-        result[command] = []
-        for index, char in enumerate(command):
-            try:
-                result[command].append(target_command[index] == char)
-            except IndexError:
-                pass
-        
-    return result
-    
-def normalize_command(D: dict) -> str:
-    max_true_count = 0
-    max_true_element = None
-
-    for element, values in D.items():
-        true_count = values.count(True)
-
-        if true_count > max_true_count:
-            max_true_count = true_count
-            max_true_element = element
-
-    if max_true_element is None:
-        return ''
-
-    return f"{max_true_element}"
-
-
-
 import argparse
 from sys import argv
 import os.path
@@ -69,7 +38,9 @@ from commands import (
     delete_email_contact,
     delete_contact,
     print_contacts,
-    print_contact
+    print_contact,
+    get_validation_commands,
+    normalize_command,
 )
 
 
@@ -129,7 +100,7 @@ def main() -> None:
     user_command = ' '.join(argv[1:])
     command, arguments = command_parser(user_command)
     
-    comans = ['add', 'change', 'del', 'show']
+    comans = ['add', 'change', 'del', 'show', 'help']
 
     if not arguments:
 
