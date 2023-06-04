@@ -67,7 +67,7 @@ class AddressBook(UserDict):
 
         else:
             for record in self.data.values():
-                if re.search(criteria, record.user.name):
+                if re.search(criteria, record.user.name.lower()):
                     serch_contacts.add_record(record)
 
         if len(serch_contacts) == 0:

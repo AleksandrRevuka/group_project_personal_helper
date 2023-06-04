@@ -15,9 +15,9 @@ class SortingFiles:
      Файли зі старих папок видаляються, порожні папки також видаляються"""
     def __init__(self, path: Path):
         self.path = path
-        self.lst_files_addresses = []
-        self.lst_known = []
-        self.dict_extensions = {
+        self.lst_files_addresses: list = []
+        self.lst_known: list = []
+        self.dict_extensions: dict = {
             'images': [],
             'videos': [],
             'documents': [],
@@ -26,7 +26,7 @@ class SortingFiles:
             'unknown': []
         }
 
-    def files_addresses(self):
+    def files_addresses(self) -> list:
         """Повертає список всіх файлів та папок зі шляхами"""
 
         items = self.path.glob('**/*')  # рекурсивно проходить по всіх папках і повертає список шляхів з файлами
@@ -36,7 +36,7 @@ class SortingFiles:
                 self.lst_files_addresses.append(str(item))
         return self.lst_files_addresses
 
-    def sort_extensions(self):
+    def sort_extensions(self) -> dict:
         """Повертає словник з груповими списками файлів зі шляхами"""
 
         for i in self.lst_files_addresses:
@@ -76,7 +76,7 @@ class SortingFiles:
             self.dict_extensions['unknown'].append(i)
         return self.dict_extensions
 
-    def removing_files(self):
+    def removing_files(self) -> None:
         """
         Сортує файли по папках.
         У випадку натрапляння на дублікат файлу, він пропускається
@@ -217,7 +217,7 @@ class SortingFiles:
                 except FileExistsError:
                     pass
 
-    def del_empty_folders(self, way=None):
+    def del_empty_folders(self, way=None) -> None:
         """Видаляє порожні теки на всіх рівнях вкладення"""
         for address, dirs, files in os.walk(self.path):
             for d in dirs:  # Для всіх папок (і вкладених також) в self.path
