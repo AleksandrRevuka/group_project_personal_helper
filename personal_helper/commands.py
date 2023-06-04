@@ -12,9 +12,10 @@ from validation import (
     check_email_in_address_book,
     check_email_not_in_address_book,
 )
-from constants import (NUMBER_OF_CONTACTS_PER_PAGE, FILE)
+from constants import FILE
 from address_book import Record, AddressBook as AB
 from entities import Phone, User, Email
+from print_table import TablePrinter
 
 
 def add_contact(addressbook: AB,
@@ -45,26 +46,26 @@ def add_contact(addressbook: AB,
 
 def print_contact(addressbook: AB, contact_name: str) -> None:
     """
-    The print_contact function prints the phone number and other details of a contact from the addressbook.
+    The print_contact function prints the contact information of a given contact name.
     
-    :param addressbook: AB: Pass the addressbook object to the function\n
-    :param contact_name: str: Specify the name of the contact to be printed\n
+    :param addressbook: AB: Pass the addressbook object to the function
+    :param contact_name: str: Specify the name of the contact to be printed
     """
     contact_name = contact_name.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
-    table = PrettyTable()
-    table.field_names = ["Contact name", "Phone number",
-                         "Email", "Birthday", "Days to Birthday"]
+    field_names = ["Contact Name", "Phone Number", 'Email', "Birthday", "Days to Birthday"]
+    table = [field_names]
 
     contact = addressbook.get_contact(contact_name)
     phone_numbers = [number.subrecord.phone for number in contact.phone_numbers]
     emails = [email.subrecord.email for email in contact.emails]
     birthday = contact.user.birthday_date.strftime('%d-%m-%Y') if contact.user.birthday_date else '-'
     day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
-    table.add_row([contact_name.title(), phone_numbers, emails, birthday, day_to_birthday])
-
-    print(f"\n{table}\n")
+    table_row = [contact_name.title(), phone_numbers, emails, birthday, day_to_birthday]
+    table.append(table_row)
+    table_ful = TablePrinter(table)
+    table_ful.print_table()
 
 
 def delete_contact(addressbook: AB, contact_name: str) -> None:
@@ -318,7 +319,7 @@ def serch_contact(addressbook: AB, criteria: str) -> None:
     result = addressbook.search(criteria)
 
     if isinstance(result, AB):
-        print_all_contacts(result)
+        print_contacts(result)
     else:
         print(result)
 
@@ -326,37 +327,26 @@ def serch_contact(addressbook: AB, criteria: str) -> None:
 
 
 def print_contacts(addressbook: AB) -> None:
-    """Print all contacts from the phone book.
-    
-    :param addressbook: AB: Pass the addressbook object to the function
-    """
-    print_all_contacts(addressbook)
-
-
-def print_all_contacts(addressbook: AB) -> None:
     """
     The print_all_contacts function prints all the contacts in the addressbook.
         It takes an AddressBook object as a parameter and returns nothing.
     
     :param addressbook: AB: Pass the addressbook object to the function
     """
-    for i, contacts in enumerate(addressbook.record_iterator(NUMBER_OF_CONTACTS_PER_PAGE), 1):
-        table = PrettyTable()
-        table.field_names = ["Contact Name", "Phone Number", 'Email',
-                             "Birthday", "Days to Birthday"]
+    field_names = ["Contact Name", "Phone Number", 'Email', "Birthday", "Days to Birthday"]
+    table = [field_names]
+    for contact in addressbook.values():
+        contact_name = contact.user.name
+        phone_numbers = [
+            number.subrecord.phone for number in contact.phone_numbers]
+        emails = [email.subrecord.email for email in contact.emails]
 
-        for contact in contacts:
-            contact_name = contact.user.name
-            phone_numbers = [
-                number.subrecord.phone for number in contact.phone_numbers]
-            emails = [email.subrecord.email for email in contact.emails]
+        birthday = contact.user.birthday_date.strftime(
+            '%d-%m-%Y') if contact.user.birthday_date else '-'
+        day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
 
-            birthday = contact.user.birthday_date.strftime(
-                '%d-%m-%Y') if contact.user.birthday_date else '-'
-            day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
-
-            table.add_row(
-                [contact_name.title(), phone_numbers, emails, birthday, day_to_birthday])
-
-        print(f"\nPage <{i}>:")
-        print(f"{table}")
+        table_row = [contact_name, phone_numbers, emails, birthday, day_to_birthday]
+        
+        table.append(table_row)
+    table_ful = TablePrinter(table)
+    table_ful.print_table()
