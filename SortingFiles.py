@@ -132,7 +132,7 @@ class SortingFiles:
                 # Виділимо шлях до файлу
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
-                new_way = str(path) + '\\images'
+                new_way = str(self.path) + '\\images'
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
                 try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
@@ -147,7 +147,7 @@ class SortingFiles:
                 # Виділимо шлях до файлу
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
-                new_way = str(path) + '\\videos'
+                new_way = str(self.path) + '\\videos'
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
                 try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
@@ -162,7 +162,7 @@ class SortingFiles:
                 # Виділимо шлях до файлу
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
-                new_way = str(path) + '\\documents'
+                new_way = str(self.path) + '\\documents'
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
                 try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
@@ -177,7 +177,7 @@ class SortingFiles:
                 # Виділимо шлях до файлу
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
-                new_way = str(path) + '\\audio'
+                new_way = str(self.path) + '\\audio'
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
                 try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
@@ -193,7 +193,7 @@ class SortingFiles:
                 # Виділимо шлях до файлу
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
-                new_way = str(path) + '\\archives'
+                new_way = str(self.path) + '\\archives'
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
                 try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
@@ -208,7 +208,7 @@ class SortingFiles:
                 # Виділимо шлях до файлу
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
-                new_way = str(path) + '\\unknown'
+                new_way = str(self.path) + '\\unknown'
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
                 try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
@@ -224,10 +224,3 @@ class SortingFiles:
                 if not os.listdir(way):  # Якщо папка порожня
                     os.rmdir(way)  # Видалення порожньої папки
 
-
-path = Path('D:/Projects/final_project_python_core/test_sort')
-testing = SortingFiles(path)
-testing.files_addresses()
-testing.sort_extensions()
-testing.removing_files()
-testing.del_empty_folders()
