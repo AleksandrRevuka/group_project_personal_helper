@@ -1,4 +1,5 @@
 from collections import UserDict
+from constants import FILE_NOTES
 import json
 
 
@@ -80,53 +81,12 @@ class Notes(UserDict):
     def save(self):
         """Зберігає нотатки у файл на диск.
         Якщо файлу не існувало, його буде створено, інакше іде допис у файл"""
-        with open('data_notes.json', '+w') as fh:
+        with open(FILE_NOTES, '+w') as fh:
             json.dump(self.data, fh)
 
     def load(self):
         """Завантажує нотатки з файлу на диску"""
-        with open('data_notes.json', 'r') as fh:
+        with open(FILE_NOTES, 'r') as fh:
             self.data = json.load(fh)
             return self.data
-
-# Тестування
-a = Notes()
-# Додавання нотаток з тегами та без тегів (присвоюється порядковий дефолтний "#notag")
-a.add_notes('', 'ffff')
-a.add_notes('', 'wwwwz')
-a.add_notes('', 'wwwwd')
-a.add_notes('#aaa', 'aaa')
-a.add_notes('#ddd', 'ggggg')
-a.add_notes('#bb', 'ccc')
-# Додавання нотатки з тегом, який вже є
-a.add_notes('#bb', 'ррр')
-# Вівід всіх нотаток з тегами
-a.show_all_sorted_notes()
-# Пошук по нотатках і тегах за існуючим параметром
-a.find('g')
-# Пошук по нотатках і тегах за неіснуючим параметром
-a.find('111111')
-# Видалення нотатки за існуючим параметром
-a.del_notes('#ddd')
-# Видалення нотатки за неіснуючим параметром
-a.del_notes('#dd')
-# Вівід всіх нотаток з тегами
-a.show_all_sorted_notes()
-# Редагування нотатки за існуючим параметром
-a.edit_notes('#aaa', '#qqq', 'eeeeeeeeeee')
-# Редагування нотатки за неіснуючим параметром
-a.edit_notes('#d', '#qqq', 'eeeeeeeeeee')
-# Вівід всіх нотаток з тегами
-a.show_all_sorted_notes()
-# Запис даних до файлу
-a.save()
-# Зчитування даних з файлу
-print(a.load())
-# Додаткові тести зі зберіганням данних
-a.add_notes('#test', 'test')
-a.save()
-print(a.load())
-a.del_notes('#test')
-a.save()
-print(a.load())
 
