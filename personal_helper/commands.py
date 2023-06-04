@@ -304,10 +304,12 @@ def print_contacts(addressbook: AB) -> None:
     table = [field_names]
     for contact in addressbook.values():
         contact_name = contact.user.name
-        phone_numbers = [
-            number.subrecord.phone for number in contact.phone_numbers]
+        phone_numbers = [number.subrecord.phone for number in contact.phone_numbers]
+        if not phone_numbers:
+            phone_numbers = '-'
         emails = [email.subrecord.email for email in contact.emails]
-
+        if not phone_numbers:
+            emails = '-'
         birthday = contact.user.birthday_date.strftime(
             '%d-%m-%Y') if contact.user.birthday_date else '-'
         day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
