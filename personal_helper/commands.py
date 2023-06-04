@@ -20,7 +20,7 @@ from print_table import TablePrinter
 
 def add_contact(addressbook: AB,
                 contact_name: str,
-                phone_number: str) -> None:
+                phone_number: str | None = None) -> None:
     """
     Adds a contact to the phone book.
     
@@ -28,20 +28,19 @@ def add_contact(addressbook: AB,
     :param contact_name: str: Pass the name of the contact to be added\n
     :param phone_number: str: Verify the phone number
     """
-    contact_name = contact_name.lower()
     check_name_in_address_book(addressbook, contact_name)
     verify_name(contact_name)
-    phone_number = sanitize_phone_number(phone_number)
-    verify_phone(phone_number)
-
-    phone = Phone(phone_number)
     user = User(contact_name)
     contact = Record(user)
-    contact.add_phone_number(phone)
+    if phone_number:
+        phone_number = sanitize_phone_number(phone_number)
+        verify_phone(phone_number)
+        phone = Phone(phone_number)
+        contact.add_phone_number(phone)
     addressbook.add_record(contact)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The contact '{contact_name.title()}' has been added: {phone.phone}")
+        f"The contact '{contact_name}' has been added")
 
 
 def print_contact(addressbook: AB, contact_name: str) -> None:
