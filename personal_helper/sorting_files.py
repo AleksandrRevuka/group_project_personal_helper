@@ -8,6 +8,7 @@ import re
 #     if path.exists():
 #     else:
 #         print(f'The way is not exists!')
+
 class SortingFiles:
     """Сортування файлів за типами.
      Якщо файл з таким ім'ям вже відсортовано, він пропускається.
