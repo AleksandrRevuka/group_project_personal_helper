@@ -40,7 +40,7 @@ from commands import (
     print_contacts,
     print_contact,
     get_validation_commands,
-    normalize_command,
+    normalize_command
 )
 
 
@@ -105,6 +105,8 @@ def main() -> None:
 
         print('Commands without arguments or error')
     else:
+        user_input = ''
+
         if command not in LIST_COMMANDS:
             temp_command = normalize_command(get_validation_commands(LIST_COMMANDS, command))
             user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
