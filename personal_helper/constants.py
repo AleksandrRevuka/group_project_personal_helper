@@ -10,6 +10,7 @@ from string import ascii_letters
 
 current_dir = os.getcwd()
 FILE = os.path.join(current_dir, 'address_book.bin')
+FILE_NOTES = os.path.join(current_dir, 'data_notes.json')
 
 NUMBER_OF_CONTACTS_PER_PAGE = 20
 
