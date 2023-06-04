@@ -19,6 +19,39 @@ Example usage:
     $ python run_bot.py del -n John
 """
 
+
+
+def get_validation_commands(commands: list, target_command: str) -> dict:
+    result = {}
+
+    for command in commands:
+        result[command] = []
+        for index, char in enumerate(command):
+            try:
+                result[command].append(target_command[index] == char)
+            except IndexError:
+                pass
+        
+    return result
+    
+def normalize_command(D: dict) -> str:
+    max_true_count = 0
+    max_true_element = None
+
+    for element, values in D.items():
+        true_count = values.count(True)
+
+        if true_count > max_true_count:
+            max_true_count = true_count
+            max_true_element = element
+
+    if max_true_element is None:
+        return ''
+
+    return f"{max_true_element}"
+
+
+
 import argparse
 from sys import argv
 import os.path
@@ -95,10 +128,20 @@ def main() -> None:
     contact_book = load_contact_book()
     user_command = ' '.join(argv[1:])
     command, arguments = command_parser(user_command)
+    
+    comans = ['add', 'change', 'del', 'show']
+
     if not arguments:
 
         print('Commands without arguments or error')
     else:
+        if command not in comans:
+            r = normalize_command(get_validation_commands(comans, command))
+            user_input = input(f'Did you mean command [{r}]? y/n -> ')
+    
+        if user_input == 'y':
+            command = r
+    
         if command == 'add':
             add_contact(contact_book, arguments.name, arguments.phone)
         elif command == 'change':
