@@ -50,7 +50,6 @@ def print_contact(addressbook: AB, contact_name: str) -> None:
     :param addressbook: AB: Pass the addressbook object to the function
     :param contact_name: str: Specify the name of the contact to be printed
     """
-    contact_name = contact_name.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
     field_names = ["Contact Name", "Phone Number", 'Email', "Birthday", "Days to Birthday"]
@@ -61,7 +60,7 @@ def print_contact(addressbook: AB, contact_name: str) -> None:
     emails = [email.subrecord.email for email in contact.emails]
     birthday = contact.user.birthday_date.strftime('%d-%m-%Y') if contact.user.birthday_date else '-'
     day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
-    table_row = [contact_name.title(), phone_numbers, emails, birthday, day_to_birthday]
+    table_row = [contact_name, phone_numbers, emails, birthday, day_to_birthday]
     table.append(table_row)
     table_ful = TablePrinter(table)
     table_ful.print_table()
@@ -74,7 +73,6 @@ def delete_contact(addressbook: AB, contact_name: str) -> None:
     :param addressbook: AB: Pass the addressbook object to the function\n
     :param contact_name: str: Pass in the name of the contact to be deleted
     """
-    contact_name = contact_name.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
     addressbook.delete_record(contact_name)
@@ -90,7 +88,6 @@ def add_phone_number_to_contact(addressbook: AB, contact_name: str, phone_number
     :param contact_name: str: Get the name of the contact that we want to add a phone number to\n
     :param phone_number: str: Pass the phone number to be added to the contact
     """
-    contact_name = contact_name.lower()
     phone_number = sanitize_phone_number(phone_number)
     verify_phone(phone_number)
     phone = Phone(phone_number)
@@ -121,7 +118,6 @@ def change_phone_number_contact(addressbook: AB,
     :param new_phone_number: str: Store the new phone number that will be used to replace the old one\n
     :param old_phone_number: str: Verify that the phone number exists in the contact's list of phone numbers
     """
-    contact_name = contact_name.lower()
     check_name_not_in_address_book(addressbook, contact_name)
     contact = addressbook.get_contact(contact_name)
 
@@ -152,7 +148,6 @@ def delete_phone_number_contact(addressbook: AB,
     :param contact_name: str: Specify the name of the contact whose phone number is to be deleted\n
     :param phone_number: str: Identify the phone number that needs to be deleted
     """
-    contact_name = contact_name.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
     contact = addressbook.get_contact(contact_name)
@@ -177,7 +172,6 @@ def add_email_to_contact(addressbook: AB,
     :param contact_name: str: Get the name of the contact you want to add an email to\n
     :param email: str: Pass the email address to be added to the contact
     """
-    contact_name = contact_name.lower()
     contact_email = contact_email.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
@@ -212,7 +206,6 @@ def change_email_contact(addressbook: AB,
     :param new_email: str: Store the new email that will be added to the contact\n
     :param old_email: str: Specify the email that is to be changed
     """
-    contact_name = contact_name.lower()
     contact_new_email = contact_new_email.lower()
     contact_old_email = contact_old_email.lower()
     check_name_not_in_address_book(addressbook, contact_name)
@@ -243,7 +236,6 @@ def delete_email_contact(addressbook: AB,
     :param contact_name: str: Get the contact name from the user\n
     :param email: str: Get the email address that will be deleted from the contact
     """
-    contact_name = contact_name.lower()
     contact_email = contact_email.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
@@ -268,7 +260,6 @@ def add_birthday_to_contact(addressbook: AB,
     :param contact_name: str: Identify the contact to add a birthday to\n
     :param birthday_date: str: Verify that the birthday date is valid
     """
-    contact_name = contact_name.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
     contact = addressbook.get_contact(contact_name)
