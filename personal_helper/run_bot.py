@@ -106,11 +106,11 @@ def main() -> None:
         print('Commands without arguments or error')
     else:
         if command not in LIST_COMMANDS:
-            r = normalize_command(get_validation_commands(LIST_COMMANDS, command))
-            user_input = input(f'Did you mean command [{r}]? y/n -> ')
+            temp_command = normalize_command(get_validation_commands(LIST_COMMANDS, command))
+            user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
     
         if user_input == 'y':
-            command = r
+            command = temp_command
     
         if command == 'add':
             add_contact(contact_book, arguments.name, arguments.phone)
