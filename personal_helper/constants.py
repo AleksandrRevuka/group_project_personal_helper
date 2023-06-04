@@ -18,3 +18,5 @@ CYRILLIC = 'абвгґдеєёжзиіїйклмнопрстуфхцчшщъыь
 LETTERS = ascii_letters + CYRILLIC + CYRILLIC.upper()
 NAME_RANGE = range(1, 50)
 PHONE_RANGE = range(7, 20)
+
+LIST_COMMANDS = ['add', 'change', 'del', 'show', 'help']

@@ -26,7 +26,7 @@ from sys import argv
 import os.path
 
 from address_book import AddressBook
-from constants import FILE
+from constants import FILE, LIST_COMMANDS
 from commands import (
     add_contact,
     add_phone_number_to_contact,
@@ -100,14 +100,13 @@ def main() -> None:
     user_command = ' '.join(argv[1:])
     command, arguments = command_parser(user_command)
     
-    comans = ['add', 'change', 'del', 'show', 'help']
 
     if not arguments:
 
         print('Commands without arguments or error')
     else:
-        if command not in comans:
-            r = normalize_command(get_validation_commands(comans, command))
+        if command not in LIST_COMMANDS:
+            r = normalize_command(get_validation_commands(LIST_COMMANDS, command))
             user_input = input(f'Did you mean command [{r}]? y/n -> ')
     
         if user_input == 'y':
