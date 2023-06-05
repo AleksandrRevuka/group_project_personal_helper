@@ -1,3 +1,4 @@
+import os.path
 from utils import sanitize_phone_number
 from validation import (
     verify_name,
@@ -18,9 +19,18 @@ from entities import Phone, User, Email
 from print_table import TablePrinter
 
 
-def add_contact(addressbook: AB,
-                contact_name: str,
-                phone_number: str | None = None) -> None:
+def load_contact_book() -> AB:
+    """
+    The load_contact_book function loads the contact book from a file.
+    If the file does not exist, it creates an empty contact book.
+    """
+    addressbook = AB()
+    if os.path.exists(FILE):
+        addressbook.read_records_from_file(FILE)
+    return addressbook
+
+
+def add_contact(contact_name: str, phone_number: str | None = None) -> None:
     """
     Adds a contact to the phone book.
 
@@ -28,6 +38,7 @@ def add_contact(addressbook: AB,
     :param contact_name: str: Pass the name of the contact to be added\n
     :param phone_number: str: Verify the phone number
     """
+    addressbook = load_contact_book()
     check_name_in_address_book(addressbook, contact_name)
     verify_name(contact_name)
     user = User(contact_name)
@@ -43,13 +54,14 @@ def add_contact(addressbook: AB,
         f"The contact '{contact_name}' has been added")
 
 
-def print_contact(addressbook: AB, contact_name: str) -> None:
+def print_contact(contact_name: str) -> None:
     """
     The print_contact function prints the contact information of a given contact name.
 
     :param addressbook: AB: Pass the addressbook object to the function
     :param contact_name: str: Specify the name of the contact to be printed
     """
+    addressbook = load_contact_book()
     check_name_not_in_address_book(addressbook, contact_name)
 
     field_names = ["Contact Name", "Phone Number", 'Email', "Birthday", "Days to Birthday"]
@@ -66,13 +78,14 @@ def print_contact(addressbook: AB, contact_name: str) -> None:
     table_ful.print_table()
 
 
-def delete_contact(addressbook: AB, contact_name: str) -> None:
+def delete_contact(contact_name: str) -> None:
     """
     The delete_contact function deletes a contact from the addressbook.
 
     :param addressbook: AB: Pass the addressbook object to the function\n
     :param contact_name: str: Pass in the name of the contact to be deleted
     """
+    addressbook = load_contact_book()
     check_name_not_in_address_book(addressbook, contact_name)
 
     addressbook.delete_record(contact_name)
@@ -80,7 +93,7 @@ def delete_contact(addressbook: AB, contact_name: str) -> None:
     print(f"The contact '{contact_name}' has been deleted.")
 
 
-def add_phone_number_to_contact(addressbook: AB, contact_name: str, phone_number: str) -> None:
+def add_phone_number_to_contact(contact_name: str, phone_number: str) -> None:
     """
     The add_phone_number_to_contact function adds a phone number to an existing contact.
 
@@ -88,6 +101,7 @@ def add_phone_number_to_contact(addressbook: AB, contact_name: str, phone_number
     :param contact_name: str: Get the name of the contact that we want to add a phone number to\n
     :param phone_number: str: Pass the phone number to be added to the contact
     """
+    addressbook = load_contact_book()
     phone_number = sanitize_phone_number(phone_number)
     verify_phone(phone_number)
     phone = Phone(phone_number)
@@ -104,8 +118,7 @@ def add_phone_number_to_contact(addressbook: AB, contact_name: str, phone_number
         f"The phone number '{phone.phone}' has been successfully added to the '{contact_name}' contact.")
 
 
-def change_phone_number_contact(addressbook: AB,
-                                contact_name: str,
+def change_phone_number_contact(contact_name: str,
                                 new_phone_number: str,
                                 old_phone_number: str) -> None:
     """
@@ -118,6 +131,7 @@ def change_phone_number_contact(addressbook: AB,
     :param new_phone_number: str: Store the new phone number that will be used to replace the old one\n
     :param old_phone_number: str: Verify that the phone number exists in the contact's list of phone numbers
     """
+    addressbook = load_contact_book()
     check_name_not_in_address_book(addressbook, contact_name)
     contact = addressbook.get_contact(contact_name)
 
@@ -138,9 +152,7 @@ def change_phone_number_contact(addressbook: AB,
         f"The contact '{contact_name}' has been updated with the new phone number: {new_phone.phone}")
 
 
-def delete_phone_number_contact(addressbook: AB,
-                                contact_name: str,
-                                phone_number: str) -> None:
+def delete_phone_number_contact(contact_name: str, phone_number: str) -> None:
     """
     The delete_phone_number_contact function deletes a phone number from the contact.
 
@@ -148,6 +160,7 @@ def delete_phone_number_contact(addressbook: AB,
     :param contact_name: str: Specify the name of the contact whose phone number is to be deleted\n
     :param phone_number: str: Identify the phone number that needs to be deleted
     """
+    addressbook = load_contact_book()
     check_name_not_in_address_book(addressbook, contact_name)
 
     contact = addressbook.get_contact(contact_name)
@@ -162,8 +175,7 @@ def delete_phone_number_contact(addressbook: AB,
         f"The phone number '{phone.phone}' was successfully deleted from the '{contact_name}' contact.")
 
 
-def add_email_to_contact(addressbook: AB,
-                         contact_name: str,
+def add_email_to_contact(contact_name: str,
                          contact_email: str) -> None:
     """
     The add_email_to_contact function adds an email to a contact in the address book.
@@ -172,6 +184,7 @@ def add_email_to_contact(addressbook: AB,
     :param contact_name: str: Get the name of the contact you want to add an email to\n
     :param email: str: Pass the email address to be added to the contact
     """
+    addressbook = load_contact_book()
     contact_email = contact_email.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
@@ -188,8 +201,7 @@ def add_email_to_contact(addressbook: AB,
         f"The email '{email.email}' has been successfully added to the '{contact_name}' contact.")
 
 
-def change_email_contact(addressbook: AB,
-                         contact_name: str,
+def change_email_contact(contact_name: str,
                          contact_new_email: str,
                          contact_old_email: str) -> None:
     """
@@ -206,6 +218,7 @@ def change_email_contact(addressbook: AB,
     :param new_email: str: Store the new email that will be added to the contact\n
     :param old_email: str: Specify the email that is to be changed
     """
+    addressbook = load_contact_book()
     contact_new_email = contact_new_email.lower()
     contact_old_email = contact_old_email.lower()
     check_name_not_in_address_book(addressbook, contact_name)
@@ -226,9 +239,7 @@ def change_email_contact(addressbook: AB,
         f"The contact '{contact_name}' has been updated with the new email: {new_email.email}")
 
 
-def delete_email_contact(addressbook: AB,
-                         contact_name: str,
-                         contact_email: str) -> None:
+def delete_email_contact(contact_name: str, contact_email: str) -> None:
     """
     The delete_email_contact function deletes an email from a contact.
 
@@ -236,6 +247,7 @@ def delete_email_contact(addressbook: AB,
     :param contact_name: str: Get the contact name from the user\n
     :param email: str: Get the email address that will be deleted from the contact
     """
+    addressbook = load_contact_book()
     contact_email = contact_email.lower()
     check_name_not_in_address_book(addressbook, contact_name)
 
@@ -250,9 +262,7 @@ def delete_email_contact(addressbook: AB,
         f"The email '{email.email}' was successfully deleted from the '{contact_name}' contact.")
 
 
-def add_birthday_to_contact(addressbook: AB,
-                            contact_name: str,
-                            birthday_date: str) -> None:
+def add_birthday_to_contact(contact_name: str, birthday_date: str) -> None:
     """
     The add_birthday_to_contact function adds a birthday to the contact.
 
@@ -260,6 +270,7 @@ def add_birthday_to_contact(addressbook: AB,
     :param contact_name: str: Identify the contact to add a birthday to\n
     :param birthday_date: str: Verify that the birthday date is valid
     """
+    addressbook = load_contact_book()
     check_name_not_in_address_book(addressbook, contact_name)
 
     contact = addressbook.get_contact(contact_name)
@@ -273,13 +284,14 @@ def add_birthday_to_contact(addressbook: AB,
         f"The birthday '{birthday_date}' has been added to the '{contact_name}' contact.")
 
 
-def serch_contact(addressbook: AB, criteria: str) -> None:
+def serch_contact(criteria: str) -> None:
     """
     The serch_contact function searches for a contact in the address book.
 
     :param addressbook: AB: Specify the type of the parameter\n
     :param criteria: str: Specify the search criteria
     """
+    addressbook = load_contact_book()
     criteria = criteria.lower()
     verify_criteria(criteria)
 
@@ -293,13 +305,15 @@ def serch_contact(addressbook: AB, criteria: str) -> None:
     print(f"{len(result)} contacts were found based on your search criteria!")
 
 
-def print_contacts(addressbook: AB) -> None:
+def print_contacts(addressbook = None) -> None:
     """
     The print_all_contacts function prints all the contacts in the addressbook.
         It takes an AddressBook object as a parameter and returns nothing.
 
     :param addressbook: AB: Pass the addressbook object to the function
     """
+    if not addressbook:
+        addressbook = load_contact_book()
     field_names = ["Contact Name", "Phone Number", 'Email', "Birthday", "Days to Birthday"]
     table = [field_names]
     for contact in addressbook.values():
