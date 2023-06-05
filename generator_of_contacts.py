@@ -4,9 +4,10 @@ import random
 from faker import Factory
 
 
-from personal_helper.address_book import Record, AddressBook as AB
-from personal_helper.entities import Phone, User, Email
-from personal_helper.constants import FILE
+from address_book import Record, AddressBook as AB
+from entities import Phone, User, Email
+from constants import FILE
+from utils import sanitize_phone_number
 
 def generator_contacts(n=10) -> list[dict]:
     """
@@ -14,7 +15,7 @@ def generator_contacts(n=10) -> list[dict]:
     """
     locales = ['en_US']
     locale = random.choice(locales)
-    contacts = []
+    contacts: list = []
     for _ in range(n):
         fake = Factory.create(locale)
         contact = {}
@@ -36,7 +37,9 @@ def move_to_address_book(contacts, address_book):
         contact_name = contact['name'].strip().lower()
         date_object = datetime.strptime(contact['birthday'], '%Y-%m-%d')
         birthday = date_object.strftime('%d-%m-%Y')
-        phone = Phone(contact['phone_number'])
+        
+        phone = Phone(sanitize_phone_number(contact['phone_number']))
+        
         email = Email(contact['email'])
         user = User(contact_name)
         contact = Record(user)
@@ -48,7 +51,7 @@ def move_to_address_book(contacts, address_book):
 
 if __name__ == '__main__':
     address_book = AB()
-    contacts = generator_contacts(120)
+    contacts = generator_contacts(10)
     address_book = move_to_address_book(contacts, address_book)
     address_book.save_records_to_file(FILE)
     

@@ -30,7 +30,7 @@ class AddressBook(UserDict):
         """
         name = record.user.name
         if name:
-            self.data[name.lower()] = record
+            self.data[name] = record
             self.sort_addressbook()
 
     def delete_record(self, record_name: str) -> None:
@@ -38,14 +38,6 @@ class AddressBook(UserDict):
         Removes a contact record from the address book.
         """
         del self.data[record_name]
-
-    def record_iterator(self, count_elements: int) -> Iterator[List['Record']]:
-        """
-        Returns a generator that yields N records at a time.
-        """
-        records = list(self.data.values())
-        for i in range(0, len(records), count_elements):
-            yield records[i:i+count_elements]
 
     def sort_addressbook(self) -> None:
         """
@@ -203,8 +195,6 @@ class Record:
 
         next_birthday = datetime(current_date.year, birthday.month, birthday.day)
 
-        if next_birthday < current_date:
-            next_birthday = datetime(
-                current_date.year + 1, birthday.month, birthday.day)
+        next_birthday = datetime(current_date.year + 1, birthday.month, birthday.day)
 
         return (next_birthday - current_date).days
