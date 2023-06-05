@@ -38,10 +38,9 @@ from commands import (
     delete_email_contact,
     delete_contact,
     print_contacts,
-    print_contact,
-    get_validation_commands,
-    normalize_command
+    print_contact
 )
+from utils import get_validation_commands, normalize_command
 
 
 def build_parser(arguments: str) -> argparse.Namespace:
