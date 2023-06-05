@@ -12,11 +12,16 @@ from validation import (
     check_phone_number_not_in_address_book,
     check_email_in_address_book,
     check_email_not_in_address_book,
+    check_path_address_to_sort_files_in_it,
+    check_file_address_to_load_notes_from_it,
 )
 from constants import FILE
 from address_book import Record, AddressBook as AB
 from entities import Phone, User, Email
+from pathlib import Path
 from print_table import TablePrinter
+from sorting_files import SortingFiles
+from notes import Notes
 
 
 def load_contact_book() -> AB:
@@ -340,4 +345,60 @@ def print_contacts(addressbook: AB = None) -> None:
         table.append(table_row)
     table_ful = TablePrinter(table)
     table_ful.print_table()
+
+
+def run_sorting_files(address: str):
+    """Sorts the files in the specified folder"""
+    path = Path(address)
+    check_path_address_to_sort_files_in_it(path)
+
+    sorting_files = SortingFiles(path)
+    sorting_files.files_addresses()
+    sorting_files.sort_extensions()
+    sorting_files.removing_files()
+    sorting_files.del_empty_folders()
+    print(f'Directory {address} has been sorted succesfully!')
+
+
+def add_note_to_data(tags: list, text=''):
+    """Adds notes with tags. If no tag is specified, a default tag is assigned"""
+    note = Notes()
+    note.load()
+    note.add_note(tags, text)
+    note.save()
+
+
+def find_note(key_word=''):
+    """
+    Search by keyword/letter/symbol.
+    The search is conducted by tags and by the text of the notes at the same time.
+    """
+    note = Notes()
+    note.load()
+    note.find(key_word)
+    print('The search is over!')
+
+
+def show_all_notes():
+    """Displays notes sorted by tags."""
+    note = Notes()
+    note.load()
+    note.show_all_sorted_notes()
+    note.save()
+
+
+def delete_note(tag: str):
+    """Deleting notes."""
+    note = Notes()
+    note.load()
+    note.del_notes(tag)
+    note.save()
+
+
+def edit_note(tag: str, new_tag: list, new_text: str):
+    """Editing notes."""
+    note = Notes()
+    note.load()
+    note.edit_notes(tag, new_tag, new_text)
+    note.save()
 
