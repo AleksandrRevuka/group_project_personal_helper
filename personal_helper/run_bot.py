@@ -131,6 +131,7 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     if len(command_elements) < 2:
         arguments = None
         return command_elements[0], arguments
+      
     arguments = user_command.split(' ', 1)[1]
     if command_elements[0] == 'add':
         parsed_args = add_parser(arguments)
@@ -184,6 +185,7 @@ def addressbook_controller(command: str, arguments: dict):
         
 def nete_controller(command: str, arguments: dict):
     pass
+  
 
 def main() -> None:
     """
