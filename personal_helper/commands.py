@@ -50,8 +50,7 @@ def add_contact(contact_name: str, phone_number: str | None = None) -> None:
         contact.add_phone_number(phone)
     addressbook.add_record(contact)
     addressbook.save_records_to_file(FILE)
-    print(
-        f"The contact '{contact_name}' has been added")
+    print(f"The contact '{contact_name}' has been added")
 
 
 def print_contact(contact_name: str) -> None:
@@ -64,19 +63,31 @@ def print_contact(contact_name: str) -> None:
     addressbook = load_contact_book()
     check_name_not_in_address_book(addressbook, contact_name)
 
-    field_names = ["Contact Name", "Phone Number", 'Email', "Birthday", "Days to Birthday"]
+    field_names = [
+        "Contact Name",
+        "Phone Number",
+        "Email",
+        "Birthday",
+        "Days to Birthday",
+    ]
     table = [field_names]
 
     contact = addressbook.get_contact(contact_name)
-    phone_numbers: list | str = [number.subrecord.phone for number in contact.phone_numbers]
+    phone_numbers: list | str = [
+        number.subrecord.phone for number in contact.phone_numbers
+    ]
     if not phone_numbers:
-        phone_numbers = '-'
+        phone_numbers = "-"
 
     emails: list | str = [email.subrecord.email for email in contact.emails]
     if not emails:
-        emails = '-'
-    birthday = contact.user.birthday_date.strftime('%d-%m-%Y') if contact.user.birthday_date else '-'
-    day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
+        emails = "-"
+    birthday = (
+        contact.user.birthday_date.strftime("%d-%m-%Y")
+        if contact.user.birthday_date
+        else "-"
+    )
+    day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else "-"
     table_row = [contact_name, phone_numbers, emails, birthday, day_to_birthday]
     table.append(table_row)
     table_ful = TablePrinter(table)
@@ -120,15 +131,16 @@ def add_phone_number_to_contact(contact_name: str, phone_number: str) -> None:
     contact.add_phone_number(phone)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The phone number '{phone.phone}' has been successfully added to the '{contact_name}' contact.")
+        f"The phone number '{phone.phone}' has been successfully added to the '{contact_name}' contact."
+    )
 
 
-def change_phone_number_contact(contact_name: str,
-                                new_phone_number: str,
-                                old_phone_number: str) -> None:
+def change_phone_number_contact(
+    contact_name: str, new_phone_number: str, old_phone_number: str
+) -> None:
     """
     The change_phone_number_contact function is used to change the phone number of a contact in the address book.
-        The function takes in an AddressBook object, a string representing the name of the contact whose phone number 
+        The function takes in an AddressBook object, a string representing the name of the contact whose phone number
         will be changed,and two strings representing both old and new phone numbers.
 
     :param addressbook: AB: Pass the addressbook object to the function
@@ -154,7 +166,8 @@ def change_phone_number_contact(contact_name: str,
     addressbook.add_record(contact)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The contact '{contact_name}' has been updated with the new phone number: {new_phone.phone}")
+        f"The contact '{contact_name}' has been updated with the new phone number: {new_phone.phone}"
+    )
 
 
 def delete_phone_number_contact(contact_name: str, phone_number: str) -> None:
@@ -177,11 +190,11 @@ def delete_phone_number_contact(contact_name: str, phone_number: str) -> None:
     contact.delete_phone_number(phone)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The phone number '{phone.phone}' was successfully deleted from the '{contact_name}' contact.")
+        f"The phone number '{phone.phone}' was successfully deleted from the '{contact_name}' contact."
+    )
 
 
-def add_email_to_contact(contact_name: str,
-                         contact_email: str) -> None:
+def add_email_to_contact(contact_name: str, contact_email: str) -> None:
     """
     The add_email_to_contact function adds an email to a contact in the address book.
 
@@ -203,19 +216,20 @@ def add_email_to_contact(contact_name: str,
     contact.add_email(email)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The email '{email.email}' has been successfully added to the '{contact_name}' contact.")
+        f"The email '{email.email}' has been successfully added to the '{contact_name}' contact."
+    )
 
 
-def change_email_contact(contact_name: str,
-                         contact_new_email: str,
-                         contact_old_email: str) -> None:
+def change_email_contact(
+    contact_name: str, contact_new_email: str, contact_old_email: str
+) -> None:
     """
     The change_email_contact function takes in an addressbook, a contact name,
-    a new email and an old email. It then checks if the contact name is not in the 
-    address book. If it isn't then it will check if the old email is not in that 
-    contact's list of emails. If it isn't then we verify that the new_email is valid 
-    and create a new Email object with this value as its parameter. We also check to see 
-    if this new_email already exists within our contacts list of emails and throw an error 
+    a new email and an old email. It then checks if the contact name is not in the
+    address book. If it isn't then it will check if the old email is not in that
+    contact's list of emails. If it isn't then we verify that the new_email is valid
+    and create a new Email object with this value as its parameter. We also check to see
+    if this new_email already exists within our contacts list of emails and throw an error
     message accordingly.
 
     :param addressbook: AB: Pass in the addressbook object
@@ -241,7 +255,8 @@ def change_email_contact(contact_name: str,
     contact.change_email(old_email, new_email)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The contact '{contact_name}' has been updated with the new email: {new_email.email}")
+        f"The contact '{contact_name}' has been updated with the new email: {new_email.email}"
+    )
 
 
 def delete_email_contact(contact_name: str, contact_email: str) -> None:
@@ -264,7 +279,8 @@ def delete_email_contact(contact_name: str, contact_email: str) -> None:
     contact.delete_email(email)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The email '{email.email}' was successfully deleted from the '{contact_name}' contact.")
+        f"The email '{email.email}' was successfully deleted from the '{contact_name}' contact."
+    )
 
 
 def add_birthday_to_contact(contact_name: str, birthday_date: str) -> None:
@@ -286,7 +302,8 @@ def add_birthday_to_contact(contact_name: str, birthday_date: str) -> None:
     addressbook.add_record(contact)
     addressbook.save_records_to_file(FILE)
     print(
-        f"The birthday '{birthday_date}' has been added to the '{contact_name}' contact.")
+        f"The birthday '{birthday_date}' has been added to the '{contact_name}' contact."
+    )
 
 
 def serch_contact(criteria: str) -> None:
@@ -319,21 +336,34 @@ def print_contacts(addressbook: AB = None) -> None:
     """
     if not addressbook:
         addressbook = load_contact_book()
-    field_names = ["Contact Name", "Phone Number", 'Email', "Birthday", "Days to Birthday"]
+    field_names = [
+        "Contact Name",
+        "Phone Number",
+        "Email",
+        "Birthday",
+        "Days to Birthday",
+    ]
     table = [field_names]
     for contact in addressbook.values():
         contact_name = contact.user.name
-        phone_numbers: list | str = [number.subrecord.phone for number in contact.phone_numbers]
+        phone_numbers: list | str = [
+            number.subrecord.phone for number in contact.phone_numbers
+        ]
         if not phone_numbers:
-            phone_numbers = '-'
+            phone_numbers = "-"
 
         emails: list | str = [email.subrecord.email for email in contact.emails]
         if not emails:
-            emails = '-'
+            emails = "-"
 
-        birthday = contact.user.birthday_date.strftime(
-            '%d-%m-%Y') if contact.user.birthday_date else '-'
-        day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
+        birthday = (
+            contact.user.birthday_date.strftime("%d-%m-%Y")
+            if contact.user.birthday_date
+            else "-"
+        )
+        day_to_birthday = (
+            contact.days_to_birthday() if contact.user.birthday_date else "-"
+        )
 
         table_row = [contact_name, phone_numbers, emails, birthday, day_to_birthday]
 
@@ -341,3 +371,25 @@ def print_contacts(addressbook: AB = None) -> None:
     table_ful = TablePrinter(table)
     table_ful.print_table()
 
+    def birthday_in_next_days(self, days_interval: str) -> None:
+        """
+        Returns users, who have birthday within the next days.
+        """
+
+        try:
+            next_days = int(days_interval)
+        except ValueError:
+            raise ValueError("The days parameter should be a digit. Try again!")
+
+        contacts_with_birthday = AB()
+
+        #       today = datetime.now().date()
+        #       end_interval = today + timedelta(days=next_days)
+
+        for contact in addressbook.values():
+            if contact.user.birthday_date:
+                days_to_birthday = contact.days_to_birthday()
+                if days_to_birthday <= next_days:
+                    contacts_with_birthday.add_record(contact)
+
+        print_contacts(contacts_with_birthday)
