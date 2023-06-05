@@ -136,6 +136,17 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
         return command_elements[0], arguments
       
     arguments = user_command.split(' ', 1)[1]
+
+    user_input = ''
+    if command_elements[0] not in ADDRESSBOOK_COMMANDS:
+        temp_command = get_close_command(transformation_commands(ADDRESSBOOK_COMMANDS, command_elements[0]))
+        
+        if temp_command is not None:
+            user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
+        
+    if user_input == 'y':
+        command_elements[0] = temp_command
+
     if command_elements[0] == 'add':
         parsed_args = add_parser(arguments)
         return command_elements[0], parsed_args
@@ -154,7 +165,8 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     elif command_elements[0] == 'note':
         parsed_args = note_parser(arguments)
         return command_elements[0], parsed_args
-
+    else:
+        print(f'Command [{command_elements[0]}] is not found!')
 
 def addressbook_controller(command: str, arguments: dict):
     
@@ -202,34 +214,17 @@ def main() -> None:
         return
     
     command, arguments = command_parser(user_command)
-
+    
     print(command, arguments)
 
     if command in ADDRESSBOOK_COMMANDS and arguments:
         addressbook_controller(command, arguments)
-        
     elif command == 'note' and arguments:
         pass
     else:
-       
-        
-        
         print(f'Command *{command}* invalid or used without arguments! Try again or use help.')
         print(info_message)
 
 
 if __name__ == '__main__':
     main()
-
-
- # user_input = ''
-    
-        # if command not in LIST_COMMANDS:
-        #     temp_command = get_close_command(transformation_commands(LIST_COMMANDS, command))
-        #     if temp_command is not None:
-        #         user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
-        #     else:
-        #         print(f'Command [{command}] is not found!')
-
-        # if user_input == 'y':
-        #     command = temp_command
