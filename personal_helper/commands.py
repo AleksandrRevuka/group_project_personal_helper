@@ -34,8 +34,8 @@ def add_contact(contact_name: str, phone_number: str | None = None) -> None:
     """
     Adds a contact to the phone book.
 
-    :param addressbook: AB: Pass the addressbook object to the function\n
-    :param contact_name: str: Pass the name of the contact to be added\n
+    :param addressbook: AB: Pass the addressbook object to the function
+    :param contact_name: str: Pass the name of the contact to be added
     :param phone_number: str: Verify the phone number
     """
     addressbook = load_contact_book()
@@ -68,8 +68,13 @@ def print_contact(contact_name: str) -> None:
     table = [field_names]
 
     contact = addressbook.get_contact(contact_name)
-    phone_numbers = [number.subrecord.phone for number in contact.phone_numbers]
-    emails = [email.subrecord.email for email in contact.emails]
+    phone_numbers: list | str = [number.subrecord.phone for number in contact.phone_numbers]
+    if not phone_numbers:
+        phone_numbers = '-'
+
+    emails: list | str = [email.subrecord.email for email in contact.emails]
+    if not emails:
+        emails = '-'
     birthday = contact.user.birthday_date.strftime('%d-%m-%Y') if contact.user.birthday_date else '-'
     day_to_birthday = contact.days_to_birthday() if contact.user.birthday_date else '-'
     table_row = [contact_name, phone_numbers, emails, birthday, day_to_birthday]
@@ -82,7 +87,7 @@ def delete_contact(contact_name: str) -> None:
     """
     The delete_contact function deletes a contact from the addressbook.
 
-    :param addressbook: AB: Pass the addressbook object to the function\n
+    :param addressbook: AB: Pass the addressbook object to the function
     :param contact_name: str: Pass in the name of the contact to be deleted
     """
     addressbook = load_contact_book()
@@ -97,8 +102,8 @@ def add_phone_number_to_contact(contact_name: str, phone_number: str) -> None:
     """
     The add_phone_number_to_contact function adds a phone number to an existing contact.
 
-    :param addressbook: AB: Pass the addressbook object to the function\n
-    :param contact_name: str: Get the name of the contact that we want to add a phone number to\n
+    :param addressbook: AB: Pass the addressbook object to the function
+    :param contact_name: str: Get the name of the contact that we want to add a phone number to
     :param phone_number: str: Pass the phone number to be added to the contact
     """
     addressbook = load_contact_book()
@@ -123,12 +128,12 @@ def change_phone_number_contact(contact_name: str,
                                 old_phone_number: str) -> None:
     """
     The change_phone_number_contact function is used to change the phone number of a contact in the address book.
-        The function takes in an AddressBook object, a string representing the name of the contact whose phone number will be changed,
-        and two strings representing both old and new phone numbers.
+        The function takes in an AddressBook object, a string representing the name of the contact whose phone number 
+        will be changed,and two strings representing both old and new phone numbers.
 
-    :param addressbook: AB: Pass the addressbook object to the function\n
-    :param contact_name: str: Specify the name of the contact that we want to change\n
-    :param new_phone_number: str: Store the new phone number that will be used to replace the old one\n
+    :param addressbook: AB: Pass the addressbook object to the function
+    :param contact_name: str: Specify the name of the contact that we want to change
+    :param new_phone_number: str: Store the new phone number that will be used to replace the old one
     :param old_phone_number: str: Verify that the phone number exists in the contact's list of phone numbers
     """
     addressbook = load_contact_book()
@@ -156,8 +161,8 @@ def delete_phone_number_contact(contact_name: str, phone_number: str) -> None:
     """
     The delete_phone_number_contact function deletes a phone number from the contact.
 
-    :param addressbook: AB: Pass the addressbook object to the function\n
-    :param contact_name: str: Specify the name of the contact whose phone number is to be deleted\n
+    :param addressbook: AB: Pass the addressbook object to the function
+    :param contact_name: str: Specify the name of the contact whose phone number is to be deleted
     :param phone_number: str: Identify the phone number that needs to be deleted
     """
     addressbook = load_contact_book()
@@ -180,8 +185,8 @@ def add_email_to_contact(contact_name: str,
     """
     The add_email_to_contact function adds an email to a contact in the address book.
 
-    :param addressbook: AB: Pass in the addressbook object\n
-    :param contact_name: str: Get the name of the contact you want to add an email to\n
+    :param addressbook: AB: Pass in the addressbook object
+    :param contact_name: str: Get the name of the contact you want to add an email to
     :param email: str: Pass the email address to be added to the contact
     """
     addressbook = load_contact_book()
@@ -213,9 +218,9 @@ def change_email_contact(contact_name: str,
     if this new_email already exists within our contacts list of emails and throw an error 
     message accordingly.
 
-    :param addressbook: AB: Pass in the addressbook object\n
-    :param contact_name: str: Get the contact name from the user\n
-    :param new_email: str: Store the new email that will be added to the contact\n
+    :param addressbook: AB: Pass in the addressbook object
+    :param contact_name: str: Get the contact name from the user
+    :param new_email: str: Store the new email that will be added to the contact
     :param old_email: str: Specify the email that is to be changed
     """
     addressbook = load_contact_book()
@@ -243,8 +248,8 @@ def delete_email_contact(contact_name: str, contact_email: str) -> None:
     """
     The delete_email_contact function deletes an email from a contact.
 
-    :param addressbook: AB: Pass in the addressbook object\n
-    :param contact_name: str: Get the contact name from the user\n
+    :param addressbook: AB: Pass in the addressbook object
+    :param contact_name: str: Get the contact name from the user
     :param email: str: Get the email address that will be deleted from the contact
     """
     addressbook = load_contact_book()
@@ -266,8 +271,8 @@ def add_birthday_to_contact(contact_name: str, birthday_date: str) -> None:
     """
     The add_birthday_to_contact function adds a birthday to the contact.
 
-    :param addressbook: AB: Specify the addressbook object that is being used\n
-    :param contact_name: str: Identify the contact to add a birthday to\n
+    :param addressbook: AB: Specify the addressbook object that is being used
+    :param contact_name: str: Identify the contact to add a birthday to
     :param birthday_date: str: Verify that the birthday date is valid
     """
     addressbook = load_contact_book()
@@ -288,7 +293,7 @@ def serch_contact(criteria: str) -> None:
     """
     The serch_contact function searches for a contact in the address book.
 
-    :param addressbook: AB: Specify the type of the parameter\n
+    :param addressbook: AB: Specify the type of the parameter
     :param criteria: str: Specify the search criteria
     """
     addressbook = load_contact_book()
@@ -305,7 +310,7 @@ def serch_contact(criteria: str) -> None:
     print(f"{len(result)} contacts were found based on your search criteria!")
 
 
-def print_contacts(addressbook = None) -> None:
+def print_contacts(addressbook: AB = None) -> None:
     """
     The print_all_contacts function prints all the contacts in the addressbook.
         It takes an AddressBook object as a parameter and returns nothing.
@@ -323,7 +328,7 @@ def print_contacts(addressbook = None) -> None:
             phone_numbers = '-'
 
         emails: list | str = [email.subrecord.email for email in contact.emails]
-        if not phone_numbers:
+        if not emails:
             emails = '-'
 
         birthday = contact.user.birthday_date.strftime(
