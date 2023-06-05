@@ -10,7 +10,7 @@ from string import ascii_letters
 
 current_dir = os.getcwd()
 FILE = os.path.join(current_dir, 'address_book.bin')
-FILE_NOTES = os.path.join(current_dir, 'data_notes.json')
+FILE_NOTES = os.path.join(current_dir, 'data_notes.bin')
 
 NUMBER_OF_CONTACTS_PER_PAGE = 20
 
@@ -19,4 +19,4 @@ LETTERS = ascii_letters + CYRILLIC + CYRILLIC.upper()
 NAME_RANGE = range(1, 50)
 PHONE_RANGE = range(7, 20)
 
-LIST_COMMANDS = ['add', 'change', 'del', 'show', 'help']
+ADDRESSBOOK_COMMANDS = ['add', 'change', 'del', 'show', 'search']

@@ -26,7 +26,7 @@ from sys import argv
 import os.path
 
 from address_book import AddressBook
-from constants import FILE, LIST_COMMANDS
+from constants import ADDRESSBOOK_COMMANDS
 from commands import (
     add_contact,
     add_phone_number_to_contact,
@@ -38,26 +38,86 @@ from commands import (
     delete_email_contact,
     delete_contact,
     print_contacts,
-    print_contact
+    print_contact,
+    serch_contact
 )
 from utils import transformation_commands, get_close_command
 
-
-def build_parser(arguments: str) -> argparse.Namespace:
+def add_parser(arguments: str) -> argparse.Namespace:
     """
     The build_parser function takes a string of arguments and returns an argparse.Namespace object.
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(description="Contact book")
-    parser.add_argument("-n", dest="name")
-    parser.add_argument("-p", dest="phone")
-    parser.add_argument("-e", dest="email")
-    parser.add_argument("-b", dest="birthday")
-    parser.add_argument("-r", dest="replace")
-    parser.add_argument("-d", dest="delete_phone")
-    parser.add_argument("-a", dest="show")
-    parser.add_argument("-s", dest="search")
+    parser = argparse.ArgumentParser(prog='add', description='add', usage='\nadd -h\nadd -n <name> -p <phone>')
+    parser.add_argument("-n", dest="name", help='Contact name')
+    parser.add_argument("-p", dest="phone", help='Number of phone')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
+def change_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    parser = argparse.ArgumentParser(prog='change', description='change contact or contact data')
+    parser.add_argument("-n", dest="name", help='Contact name')
+    parser.add_argument("-p", dest="phone", help='Number of phone')
+    parser.add_argument("-e", dest="email", help='email')
+    parser.add_argument("-b", dest="birthday", help='Date of birth in format dd-mm-yyyy')
+    parser.add_argument("-r", dest="replace", help='This argument use only after -p or -e')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
+def del_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    parser = argparse.ArgumentParser(prog='del', description='delete contact or contact data')
+    parser.add_argument("-n", dest="name", help='Contact name')
+    parser.add_argument("-p", dest="phone", help='Number of phone')
+    parser.add_argument("-e", dest="email", help='email')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
+def show_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    parser = argparse.ArgumentParser(prog='show', description='dicplay contact data')
+    parser.add_argument("-a", dest="show", help='Use show -a all or show -a <contact_name>')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
+def search_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    parser = argparse.ArgumentParser(prog='search', description='search')
+    parser.add_argument("-s", dest="search", help='Use search -s <key word>')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
+def note_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    parser = argparse.ArgumentParser(prog='note', description='note')
+    parser.add_argument("-a", dest="add", help='add new note')
     args = parser.parse_args(arguments.split())
     return args
 
@@ -74,76 +134,80 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     if len(command_elements) < 2:
         arguments = None
         return command_elements[0], arguments
-
+      
     arguments = user_command.split(' ', 1)[1]
-    parsed_args = build_parser(arguments)
-    return command_elements[0], parsed_args
+    if command_elements[0] == 'add':
+        parsed_args = add_parser(arguments)
+        return command_elements[0], parsed_args
+    elif command_elements[0] == 'change':
+        parsed_args = change_parser(arguments)
+        return command_elements[0], parsed_args
+    elif command_elements[0] == 'del':
+        parsed_args = del_parser(arguments)
+        return command_elements[0], parsed_args
+    elif command_elements[0] == 'show':
+        parsed_args = show_parser(arguments)
+        return command_elements[0], parsed_args
+    elif command_elements[0] == 'search':
+        parsed_args = search_parser(arguments)
+        return command_elements[0], parsed_args
+    elif command_elements[0] == 'note':
+        parsed_args = note_parser(arguments)
+        return command_elements[0], parsed_args
 
 
-def load_contact_book() -> AddressBook:
-    """
-    The load_contact_book function loads the contact book from a file.
-    If the file does not exist, it creates an empty contact book.
-    """
-    contact_book = AddressBook()
-    if os.path.exists(FILE):
-        contact_book.read_records_from_file(FILE)
-    return contact_book
-
+def addressbook_controller(command: str, arguments: dict):
+    if command == 'add':
+        add_contact(arguments.name, arguments.phone)
+    elif command == 'change':
+        if arguments.phone and not arguments.replace:
+            add_phone_number_to_contact(arguments.name, arguments.phone)
+        elif arguments.phone and arguments.replace:
+            change_phone_number_contact(arguments.name, arguments.replace, arguments.phone)
+        elif arguments.email and not arguments.replace:
+            add_email_to_contact(arguments.name, arguments.email)
+        elif arguments.email and arguments.replace:
+            change_email_contact(arguments.name, arguments.replace, arguments.email)
+        elif arguments.birthday:
+            add_birthday_to_contact(arguments.name, arguments.birthday)
+    elif command == 'del':
+        if arguments.name and arguments.phone:
+            delete_phone_number_contact(arguments.name, arguments.phone)
+        elif arguments.name and arguments.email:
+            delete_email_contact(arguments.name, arguments.email)
+        elif arguments.name and not arguments.email and not arguments.phone:
+            delete_contact(arguments.name)
+    elif command == 'show':
+        if arguments.show == 'all':
+            print_contacts()
+        elif arguments.show:
+            print_contact(arguments.show)
+    elif command == 'search':
+        serch_contact(arguments.search)
+        
+        
+def nete_controller(command: str, arguments: dict):
+    pass
+  
 
 def main() -> None:
     """
     The main function of the program.
     """
-    contact_book = load_contact_book()
     user_command = ' '.join(argv[1:])
+    info_message = 'Use command:\nadd\nchange\ndel\nshow\nsearch\n\nDetail about command:\n[command] -h'
+    if not user_command or user_command == '-h':
+        print(info_message)
+        return
     command, arguments = command_parser(user_command)
-    
 
-    if not arguments:
-
-        print('Commands without arguments or error')
+    if command in ADDRESSBOOK_COMMANDS and arguments:
+        addressbook_controller(command, arguments)
+    elif command == 'note' and arguments:
+        pass
     else:
-        user_input = ''
-
-        if command not in LIST_COMMANDS:
-            temp_command = get_close_command(transformation_commands(LIST_COMMANDS, command))
-            if temp_command is not None:
-                user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
-            else:
-                print(f'Command [{command}] is not found!')
-
-        if user_input == 'y':
-            command = temp_command
-    
-        if command == 'add':
-            add_contact(contact_book, arguments.name, arguments.phone)
-        elif command == 'change':
-            if arguments.phone and not arguments.replace:
-                add_phone_number_to_contact(contact_book, arguments.name, arguments.phone)
-            elif arguments.phone and arguments.replace:
-                change_phone_number_contact(contact_book, arguments.name, arguments.replace, arguments.phone)
-            elif arguments.email and not arguments.replace:
-                add_email_to_contact(contact_book, arguments.name, arguments.email)
-            elif arguments.email and arguments.replace:
-                change_email_contact(contact_book, arguments.name, arguments.replace, arguments.email)
-            elif arguments.birthday:
-                add_birthday_to_contact(contact_book, arguments.name, arguments.birthday)
-        elif command == 'del':
-            if arguments.name and arguments.phone:
-                delete_phone_number_contact(contact_book, arguments.name, arguments.phone)
-            elif arguments.name and arguments.email:
-                delete_email_contact(contact_book, arguments.name, arguments.email)
-            elif arguments.name and not arguments.email and not arguments.phone:
-                delete_contact(contact_book, arguments.name)
-        elif command == 'show':
-            if arguments.show == 'all':
-                print_contacts(contact_book)
-            elif arguments.show:
-                print_contact(contact_book, arguments.show)
-
-        print('We have arguments')
-        print(arguments)
+        print(f'Command *{command}* invalid or used without arguments! Try again or use help.')
+        print(info_message)
 
 
 if __name__ == '__main__':

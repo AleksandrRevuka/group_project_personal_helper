@@ -24,7 +24,7 @@ def verify_name(name: str) -> None:
 
     if len(name) not in NAME_RANGE:
         raise ValueError(
-            f"Name length must be between {NAME_RANGE[0]} and {NAME_RANGE[-1]}, but got '{name.title()}'")
+            f"Name length must be between {NAME_RANGE[0]} and {NAME_RANGE[-1]}, but got '{name}'")
 
 
 @input_error
@@ -81,7 +81,7 @@ def check_name_in_address_book(address_book: AB, name: str) -> None:
     """
     if name in address_book:
         raise ValueError(
-            f"The contact '{name.title()}' already exists in the address book.")
+            f"The contact '{name}' already exists in the address book.")
 
 
 @input_error
@@ -92,7 +92,7 @@ def check_name_not_in_address_book(address_book: AB, name: str) -> None:
         the contact already exists in the address book.
     """
     if name not in address_book:
-        raise KeyError(f"The contact '{name.title()}' was not found.")
+        raise KeyError(f"The contact '{name}' was not found.")
 
 
 @input_error
@@ -103,7 +103,7 @@ def check_phone_number_in_address_book(contact: Record, phone: Phone, contact_na
     """
     if phone in [phone_number.subrecord for phone_number in contact.phone_numbers]:
         raise ValueError(
-            f"The phone number '{phone.phone}' already exists in the '{contact_name.title()}' contact.")
+            f"The phone number '{phone.phone}' already exists in the '{contact_name}' contact.")
 
 
 @input_error
@@ -116,7 +116,7 @@ def check_phone_number_not_in_address_book(contact: Record,
     """
     if phone not in [phone_number.subrecord for phone_number in contact.phone_numbers]:
         raise ValueError(
-            f"Contact's phone '{phone.phone}' was not found in the '{contact_name.title()}' contact.")
+            f"Contact's phone '{phone.phone}' was not found in the '{contact_name}' contact.")
 
 
 @input_error
@@ -127,7 +127,7 @@ def check_email_in_address_book(contact: Record, email: Email, contact_name: str
     """
     if email in [email.subrecord for email in contact.emails]:
         raise ValueError(
-            f"The contact's email '{email.email}' already exists in this '{contact_name.title()}' contact.")
+            f"The contact's email '{email.email}' already exists in this '{contact_name}' contact.")
 
 
 @input_error
@@ -138,4 +138,4 @@ def check_email_not_in_address_book(contact: Record, email: Email, contact_name:
     """
     if email not in [email.subrecord for email in contact.emails]:
         raise ValueError(
-            f"Contact's email '{email.email}' was not found in the '{contact_name.title()}' contact.")
+            f"Contact's email '{email.email}' was not found in the '{contact_name}' contact.")
