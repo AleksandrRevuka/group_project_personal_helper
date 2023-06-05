@@ -4,6 +4,11 @@ from pathlib import Path
 import re
 
 
+# перед створенням цього класу треба прописати перевірку, що шлях існує і вказує на папку
+#     if path.exists():
+#     else:
+#         print(f'The way is not exists!')
+
 class SortingFiles:
     """Сортування файлів за типами.
      Якщо файл з таким ім'ям вже відсортовано, він пропускається.

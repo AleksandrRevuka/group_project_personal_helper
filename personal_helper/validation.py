@@ -5,12 +5,9 @@ from string import digits
 from datetime import datetime
 
 from error import input_error
-from constants import LETTERS, NAME_RANGE, PHONE_RANGE, FILE_NOTES
+from constants import LETTERS, NAME_RANGE, PHONE_RANGE
 from address_book import Record, AddressBook as AB
 from entities import Phone, Email
-
-import os
-from pathlib import Path
 
 
 @input_error
@@ -142,13 +139,3 @@ def check_email_not_in_address_book(contact: Record, email: Email, contact_name:
     if email not in [email.subrecord for email in contact.emails]:
         raise ValueError(
             f"Contact's email '{email.email}' was not found in the '{contact_name}' contact.")
-
-
-@input_error
-def check_path_address_to_sort_files_in_it(path: Path):
-    """Checks if the path (for sorting files) exists and if it points to a folder"""
-    if not path.exists():
-        raise ValueError('The way is not exists!')
-    elif os.path.isfile(path):
-        raise ValueError('The path points to a file! Must point to a folder!')
-

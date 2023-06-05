@@ -1,6 +1,5 @@
 from collections import UserDict
 from constants import FILE_NOTES
-from pathlib import Path
 import pickle
 
 
@@ -11,37 +10,24 @@ class Notes(UserDict):
         self.data = {}
 
     # Методу потрібен список тегів (можна порожній список)
-    def add_note(self, tags: list, text: str):
+    def add_notes(self, tags: list, text: str):
         """Додає нотатки з тегами. Якщо тег не задано, то призначається дефолтний тег"""
         tags = tuple(tags)
-        # Обробимо випадок, коли тег не призначено
         if len(tags) == 0:
             tags = ('#notag',)
-            if tags not in self.data.keys():
-                self.data[tags] = text
-                print('Note added!')
-                return self.data
-            elif tags == ('#notag', ) and tags in self.data.keys():
-                counter = 1
-                while tags in self.data.keys():
-                    tags = tuple(['#notag' + str(counter)])
-                    counter += 1
-                self.data[tags] = text
-                print('Note added!')
-                return self.data
-        # Обробимо випадок, коли тег призначено. Необхідно перевірити, щоб такого тегу не було в нотатках
-        for key in self.data.keys():
-            for element in key:
-                for i in tags:
-                    if i == element:
-                        print("New tag is already in notes. Note can't be added!")
-                        return None
-        self.data[tags] = text
-        print('Note added!')
+        if tags not in self.data.keys():
+            self.data[tags] = text
+        elif tags == ('#notag', ) and tags in self.data.keys():
+            counter = 1
+            while tags in self.data.keys():
+                tags = tuple(['#notag' + str(counter)])
+                counter += 1
+            self.data[tags] = text
+        else:
+            print(f"The tag is already exists and can't be added!")
         return self.data
 
-
-    def find(self, key_word: str):
+    def find(self, key_word):
         """Пошук за ключовим словом/буквою/символом.
         Пошук ведеться по тегах та по тексту нотатків одночасно."""
         lst = []
@@ -64,6 +50,7 @@ class Notes(UserDict):
             print(f'Nothing was found for parameter "{key_word}".')
 
     def show_all_sorted_notes(self):
+        """Виводить відсортовані за тегами нотатки."""
         """Виводить відсортовані за тегами нотатки."""
         print('-'*50)
         print("All notes:")
@@ -93,47 +80,22 @@ class Notes(UserDict):
             print('Note with tag "' + tag + '" for deleting not found.')
         return self.data
 
-    def edit_notes(self, tag: str, new_tag: list, new_text=''):
+    def edit_notes(self, tag: str, new_tag: str, new_text: str):
         """Редагування нотаток"""
-        # Перевіримо наявність tag
-        counter1 = 0
-        for key1 in self.data.keys():
-            for element1 in key1:
-                if element1 == tag:
-                    counter1 += 1
-                    break
-        if counter1 == 0:
-            print(f"No editable tag found!")
-            return None
-
-        # Якщо не вказано значення нового тегу
-        tags = tuple(new_tag)
-        if len(tags) == 0:
-            print(f"No name of new tag!")
-            return None
-
-        # Якщо new_tag задано, перевіримо, що елементи new_tag відсутні в нотатках
-        for key2 in self.data.keys():
-            for element2 in key2:
-                for i in tags:
-                    if i == element2:
-                        print("New tag is already in notes. Note can't be added!")
-                        return None
-
-        # Виконаємо заміну старої нотатки на нову
-        # для запобігання "RuntimeError: dictionary changed size during iteration" ітеруємося по копії
+        # для запобігання RuntimeError: dictionary changed size during iteration ітеруємося по копії
         copy = self.data.copy()
         flag = True
         while flag:
-            for key3 in copy.keys():
-                for element3 in key3:
-                    if tag == element3:
-                        del self.data[key3]
+            for key in copy.keys():
+                for element in key:
+                    if tag == element:
+                        del self.data[key]
+                        self.data[(new_tag,)] = new_text
+                        print(f'Note with tag "{tag}" has been edited!')
                         flag = False
             break
         if flag:
-            print('Note with tag "' + tag + '" for deleting not found.')
-        self.data[tags] = new_text
+            print('Note with tag "' + tag + '" for editing not found.')
         return self.data
 
     def save(self):
@@ -143,10 +105,7 @@ class Notes(UserDict):
             pickle.dump(self.data, fh)
 
     def load(self):
-        """Завантажує нотатки з файлу на диску. Якщо файл ще не створений, помилки не виникає"""
-        if Path(FILE_NOTES).exists():
-            with open(FILE_NOTES, 'rb') as fh:
-                self.data = pickle.load(fh)
-                return self.data
-        else:
-            pass
+        """Завантажує нотатки з файлу на диску"""
+        with open(FILE_NOTES, 'rb') as fh:
+            self.data = pickle.load(fh)
+            return self.data
