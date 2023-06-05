@@ -382,6 +382,7 @@ def print_contacts(addressbook: AB = None) -> None:
             raise ValueError("The days parameter should be a digit. Try again!")
 
         contacts_with_birthday = AB()
+        addressbook = load_contact_book()
 
         for contact in addressbook.values():
             if contact.user.birthday_date:
