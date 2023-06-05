@@ -107,7 +107,7 @@ def main() -> None:
         user_input = ''
 
         if command not in LIST_COMMANDS:
-            temp_command = transformation_commands(get_close_command(LIST_COMMANDS, command))
+            temp_command = get_close_command(transformation_commands(LIST_COMMANDS, command))
             if temp_command is not None:
                 user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
             else:
