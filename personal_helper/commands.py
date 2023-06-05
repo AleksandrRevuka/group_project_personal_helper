@@ -24,6 +24,7 @@ def load_contact_book() -> AB:
     The load_contact_book function loads the contact book from a file.
     If the file does not exist, it creates an empty contact book.
     """
+    
     addressbook = AB()
     if os.path.exists(FILE):
         addressbook.read_records_from_file(FILE)
