@@ -17,7 +17,8 @@ def sanitize_phone_number(phone: str) -> str:
     return ''.join(number.strip().strip('(, ), -, +, x, .') for number in phone)
 
 
-def get_validation_commands(commands: list, target_command: str) -> dict:
+def transformation_commands(commands: list, target_command: str) -> dict:
+    """Tranformation list to dict with commands as key, values as bool(startswith)"""
     result = {}
     
     for command in commands:
@@ -30,8 +31,8 @@ def get_validation_commands(commands: list, target_command: str) -> dict:
         
     return result
 
-def normalize_command(D: dict) -> str:
-    
+def get_close_command(D: dict) -> str:
+    """Get command with max count True"""
     max_true_count = 0
     max_true_element = None
 

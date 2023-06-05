@@ -40,7 +40,7 @@ from commands import (
     print_contacts,
     print_contact
 )
-from utils import get_validation_commands, normalize_command
+from utils import transformation_commands, get_close_command
 
 
 def build_parser(arguments: str) -> argparse.Namespace:
@@ -107,7 +107,7 @@ def main() -> None:
         user_input = ''
 
         if command not in LIST_COMMANDS:
-            temp_command = normalize_command(get_validation_commands(LIST_COMMANDS, command))
+            temp_command = transformation_commands(get_close_command(LIST_COMMANDS, command))
             if temp_command is not None:
                 user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
             else:
