@@ -109,8 +109,11 @@ def main() -> None:
 
         if command not in LIST_COMMANDS:
             temp_command = normalize_command(get_validation_commands(LIST_COMMANDS, command))
-            user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
-    
+            if temp_command is not None:
+                user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
+            else:
+                print(f'Command [{command}] is not found!')
+
         if user_input == 'y':
             command = temp_command
     

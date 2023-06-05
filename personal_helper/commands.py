@@ -366,6 +366,7 @@ def get_validation_commands(commands: list, target_command: str) -> dict:
     return result
 
 def normalize_command(D: dict) -> str:
+    
     max_true_count = 0
     max_true_element = None
 
@@ -376,7 +377,9 @@ def normalize_command(D: dict) -> str:
             max_true_count = true_count
             max_true_element = element
 
-    if max_true_element is None:
-        return ''
+    
 
+    if max_true_element is None:
+        return None
+    
     return f"{max_true_element}"
