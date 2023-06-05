@@ -157,6 +157,7 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
 
 
 def addressbook_controller(command: str, arguments: dict):
+    
     if command == 'add':
         add_contact(arguments.name, arguments.phone)
     elif command == 'change':
@@ -199,16 +200,36 @@ def main() -> None:
     if not user_command or user_command == '-h':
         print(info_message)
         return
+    
     command, arguments = command_parser(user_command)
+
+    print(command, arguments)
 
     if command in ADDRESSBOOK_COMMANDS and arguments:
         addressbook_controller(command, arguments)
+        
     elif command == 'note' and arguments:
         pass
     else:
+       
+        
+        
         print(f'Command *{command}* invalid or used without arguments! Try again or use help.')
         print(info_message)
 
 
 if __name__ == '__main__':
     main()
+
+
+ # user_input = ''
+    
+        # if command not in LIST_COMMANDS:
+        #     temp_command = get_close_command(transformation_commands(LIST_COMMANDS, command))
+        #     if temp_command is not None:
+        #         user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
+        #     else:
+        #         print(f'Command [{command}] is not found!')
+
+        # if user_input == 'y':
+        #     command = temp_command
