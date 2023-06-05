@@ -31,19 +31,17 @@ def transformation_commands(commands: list, target_command: str) -> dict:
         
     return result
 
-def get_close_command(D: dict) -> str:
+def get_close_command(commands_dict: dict) -> str:
     """Get command with max count True"""
     max_true_count = 0
     max_true_element = None
 
-    for element, values in D.items():
+    for element, values in commands_dict.items():
         true_count = values.count(True)
 
         if true_count > max_true_count:
             max_true_count = true_count
             max_true_element = element
-
-    
 
     if max_true_element is None:
         return None
