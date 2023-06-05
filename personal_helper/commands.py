@@ -340,3 +340,4 @@ def print_contacts(addressbook: AB = None) -> None:
         table.append(table_row)
     table_ful = TablePrinter(table)
     table_ful.print_table()
+
