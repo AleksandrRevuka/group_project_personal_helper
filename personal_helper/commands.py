@@ -383,9 +383,6 @@ def print_contacts(addressbook: AB = None) -> None:
 
         contacts_with_birthday = AB()
 
-        #       today = datetime.now().date()
-        #       end_interval = today + timedelta(days=next_days)
-
         for contact in addressbook.values():
             if contact.user.birthday_date:
                 days_to_birthday = contact.days_to_birthday()

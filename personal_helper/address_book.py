@@ -9,7 +9,7 @@ This module defines the following classes:
 import calendar
 import re
 import pickle
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Union, Iterator, Any, List
 from collections import UserDict
 
@@ -189,30 +189,40 @@ class Record:
         """
         Calculate the number of days to the next birthday.
         """
-        current_date = datetime.now().date()
-        is_29_february = False
 
         birthday = self.user.birthday_date
         if birthday:
+            # current_date = datetime(2020, 6, 5)
+            # current_date = datetime(2020, 1, 5)
+            current_date = datetime.now()
+            has_29_february = False
+
             if birthday.day == 29 and birthday.month == 2:
-                is_29_february == True
+                has_29_february = True
 
-            if is_29_february and not calendar.isleap(current_date.year):
-                birthday = birthday - timedelta(days=1)
+            if has_29_february and not calendar.isleap(current_date.year):
+                birthday = birthday.replace(day=28)
 
-        next_birthday = datetime(current_date.year, birthday.month, birthday.day)
+            next_birthday = datetime(current_date.year, birthday.month, birthday.day)
 
-        if (days_to_bd := (next_birthday - current_date).days) > 0:
-            return days_to_bd
-        else:
-            next_year = current_date.year + 1
-            days_to_bd = (next_birthday.replace(year=next_year) - current_date).days
+            if (days_to_bd := (next_birthday - current_date).days) > 0:
+                return days_to_bd
+            else:
+                next_year = current_date.year + 1
+                """
+                If the user has a birthday on the 29.02 and this year is leap year,
+                but the date is already in the past, the date stays unchanged,
+                however the next year is not leap. Thus it should be replaced
+                with 28.02 and the next year
+                """
+                if has_29_february:
+                    if calendar.isleap(next_year):
+                        next_birthday = next_birthday.replace(year=next_year, day=29)
+                    else:
+                        next_birthday = next_birthday.replace(year=next_year, day=28)
+                else:
+                    next_birthday = next_birthday.replace(year=next_year)
 
-        """ 
-        If the user has a birthday on the 29.02 and the next year is leap,
-        adding one day, because the date was already deducted in "...-timedelta(days=1)"
-        """
-        if is_29_february and calendar.isleap(next_year):
-            days_to_bd += 1
+                days_to_bd = (next_birthday - current_date).days
 
-        return days_to_bd
+                return days_to_bd
