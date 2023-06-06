@@ -219,6 +219,9 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     elif command_elements[0] == 'search':
         parsed_args = search_parser(arguments)
         return command_elements[0], parsed_args
+    elif command_elements[0] == 'birth':
+        parsed_args = birth_parser(arguments)
+        return command_elements[0], parsed_args
     elif command_elements[0] == 'sort':
         parsed_args = sort_parser(arguments)
         return command_elements[0], parsed_args
