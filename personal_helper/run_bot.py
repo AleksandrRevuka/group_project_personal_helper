@@ -148,6 +148,7 @@ def note_parser(arguments: str) -> argparse.Namespace:
     parser.add_argument("-n", dest="note", type=str, nargs='+', help='note text')
     parser.add_argument("-r", dest="replace", nargs='+', help='new tag')
     args = parser.parse_args(arguments.split(' '))
+    print(args.add)
     if args.note:
         string = ''
         for element in args.note:
