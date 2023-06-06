@@ -212,9 +212,9 @@ class SortingFiles:
                 except FileExistsError:
                     pass
 
-    def del_empty_folders(self, way=None) -> None:
+    def del_empty_folders(self) -> None:
         """Видаляє порожні теки на всіх рівнях вкладення"""
-        for address, dirs, files in os.walk(self.path):
+        for address, dirs, files in os.walk(self.path, topdown=False):  # без "topdown=False" видаляє не всі порожні папки!
             for d in dirs:  # Для всіх папок (і вкладених також) в self.path
                 way = os.path.join(address, d)  # Створює шляхи до всіх папок
                 if not os.listdir(way):  # Якщо папка порожня
