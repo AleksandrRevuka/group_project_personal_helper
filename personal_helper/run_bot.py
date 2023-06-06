@@ -140,14 +140,14 @@ def note_parser(arguments: str) -> argparse.Namespace:
     can be accessed by name.
     """
     parser = argparse.ArgumentParser(prog='note', description='note')
-    parser.add_argument("-a", dest="add", nargs='+', help='add new tag')
+    parser.add_argument("-a", dest="add", nargs='?', default='', help='add new tag')
     parser.add_argument("-f", dest="find", help='find note')
     parser.add_argument("-t", dest="tag", help='tag')
     parser.add_argument("-s", dest="show", help='show all note')
     parser.add_argument("-d", dest="delete", help='delete note')
     parser.add_argument("-n", dest="note", type=str, nargs='+', help='note text')
     parser.add_argument("-r", dest="replace", nargs='+', help='new tag')
-    args = parser.parse_args(arguments.split())
+    args = parser.parse_args(arguments.split(' '))
     if args.note:
         string = ''
         for element in args.note:
@@ -241,8 +241,7 @@ def sort_controller(arguments: str):
 def note_controller(arguments: dict):
     if arguments.tag and arguments.replace and arguments.note:
         edit_note(arguments.tag, arguments.replace, arguments.note)
-    elif arguments.add and arguments.note:
-        print(arguments.add)
+    elif arguments.note:
         add_note_to_data(arguments.add, arguments.note)
     elif arguments.show == 'all':
         show_all_notes()
