@@ -128,6 +128,19 @@ def search_parser(arguments: str) -> argparse.Namespace:
     return args
 
 
+def birth_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    usage_info = '\nbirth -h\nbirth -d <days>'
+    parser = argparse.ArgumentParser(prog='birth', description='birth', usage=usage_info)
+    parser.add_argument("-d", dest="days", help='Range of days')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
 def sort_parser(arguments: str) -> argparse.Namespace:
     """
     The build_parser function takes a string of arguments and returns an argparse.Namespace object.
