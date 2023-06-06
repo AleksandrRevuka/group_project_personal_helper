@@ -3,19 +3,21 @@
 import re
 from string import digits
 from datetime import datetime
-
-from error import input_error
-from constants import LETTERS, NAME_RANGE, PHONE_RANGE, FILE_NOTES
-from address_book import Record, AddressBook as AB
-from entities import Phone, Email
-
 import os
 from pathlib import Path
 
+from error import input_error
+from constants import LETTERS, NAME_RANGE, PHONE_RANGE
+from address_book import Record, AddressBook as AB
+from entities import Phone, Email
+
 
 @input_error
-def verify_name(name: str) -> None:
-    """Verifies that the input string `name` is a valid name for a contact."""
+def name_validation(name: str) -> None:
+    """
+    The name_validation function checks if the name is a string, and if it contains only letters.
+    It also checks that the length of the name is between 2 and 30 characters.
+    """
 
     if not isinstance(name, str):
         raise TypeError(
@@ -31,9 +33,12 @@ def verify_name(name: str) -> None:
 
 
 @input_error
-def verify_phone(phone: str) -> None:
-    """Verifies a phone number."""
-
+def phone_validation(phone: str) -> None:
+    """
+    The phone_validation function checks if the phone number is valid.
+        It raises a TypeError if the phone number contains anything other than digits and '+'.
+        It raises a ValueError if the length of the phone number is not between 11 and 16 numbers.
+    """
     if len(phone.strip(digits + '+')) != 0:
         raise TypeError(
             f"Contact's phone can only contain digits, but got '{phone}'")
@@ -44,8 +49,12 @@ def verify_phone(phone: str) -> None:
 
 
 @input_error
-def verify_birthday_date(birthday_date: str) -> None:
-    """Verifies a birthday data."""
+def birthday_date_validation(birthday_date: str) -> None:
+    """
+    The birthday_date_validation function takes a string as an argument and checks if it is in the correct format.
+    If not, it raises a ValueError exception. If the date is in the future, another ValueError exception will be raised.
+    """
+
     try:
         birthday = datetime.strptime(birthday_date, '%d-%m-%Y')
     except ValueError as error:
@@ -58,17 +67,22 @@ def verify_birthday_date(birthday_date: str) -> None:
 
 
 @input_error
-def verify_email(email: str) -> None:
-    """Verifies an email address."""
+def email_validation(email: str) -> None:
+    """
+    The email_validation function takes in a string and checks if it is a valid email address.
+    It does this by using the re module to match the inputted string with a pattern that represents
+    a valid email address. If there is no match, then an error message will be raised.
+    """
+
     pattern = r"[a-zA-Z][a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"
     if not re.match(pattern, email):
         raise ValueError(f"Invalid '{email}' email address.")
 
 
 @input_error
-def verify_criteria(criteria: str) -> None:
+def criteria_validation(criteria: str) -> None:
     """
-    The verify_criteria function is used to verify that the criteria entered by the user
+    The criteria_validation function is used to verify that the criteria entered by the user
     is only numbers or letters.  If it is not, then a ValueError exception will be raised.
     """
     if not criteria.isdigit() and not criteria.isalpha():
@@ -153,3 +167,13 @@ def check_path_address_to_sort_files_in_it(path: Path) -> None:
         raise ValueError('The path points to a file! Must point to a folder!')
 
 
+@input_error
+def check_birthday_in_next_days(days_interval: str) -> None:
+    """
+    The check_birthday_in_next_days function checks if the days_interval parameter is a digit.
+    If it's not, then an exception is raised.
+    """
+    try:
+        int(days_interval)
+    except ValueError as error:
+        raise ValueError("The days parameter should be a digit.") from error

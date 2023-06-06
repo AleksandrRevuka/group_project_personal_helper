@@ -1,33 +1,25 @@
 """
-This module provides a command-line interface for managing a contact book. It allows users to perform various operations
-such as adding contacts, modifying contact information, deleting contacts, and displaying contact details.
+This module implements an address book application with various commands and functionalities.
 
-The module consists of the following components:
-- `address_book`: Contains the `AddressBook` class that represents the contact book.
-- `constants`: Defines constants used in the module.
-- `commands`: Provides functions for executing different commands on the contact book.
-- `build_parser`: Defines a function for parsing command-line arguments using `argparse`.
-- `command_parser`: Implements a function for parsing user commands and extracting command names and arguments.
-- `load_contact_book`: Loads the contact book from a file or creates an empty contact book if the file doesn't exist.
-- `main`: The main function that processes user commands and executes the corresponding operations.
+Available commands:
+- add: Create a new contact in the address book. Usage: add -n <name> -p <phone>
+- change: Change contact or contact data. Usage: change -n <name> -p <phone> | -e <email> | -b <birthday>
+- del: Delete contact or contact data. Usage: del -n <name> -p <phone> | -e <email> | -b <birthday>
+- show: Display contact data. Usage: show -a all | show -a <name>
+- search: Search contacts by keywords. Usage: search -s <keyword>
+- birth: Get contacts with birthdays in the next few days. Usage: birth -d <days>
+- sort: Sort files in a directory. Usage: sort -d <directory_path>
+- note: Perform operations on notes. 
+    Usage: note -a <tag> -n <text_note> | note -f <tag> | note -t <old_tag> -r <new_tag> -n | note -s all | note -d <tag> | note -n <note> | note -r <replace>
 
-To run the module, execute the script `run_bot.py` with appropriate command-line arguments.
-
-Example usage:
-    $ python run_bot.py add -n John -p 380634567890
-    $ python run_bot.py change -n John -p 380991234567 -r 380634567890
-    $ python run_bot.py del -n John
+For more information about each command, use the -h option after the command name. Example: add -h
 """
-
-
 
 import argparse
 from sys import argv
-import os.path
 
-from address_book import AddressBook
 from constants import (
-    ADDRESSBOOK_COMMANDS, 
+    ADDRESSBOOK_COMMANDS,
     LIST_COMMANDS,
     INFO_MESSAGE
 )
@@ -55,12 +47,16 @@ from commands import (
 )
 from utils import transformation_commands, get_close_command
 
+
 def add_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The add_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The function uses the argparse module to create a parser for the add command, which is used 
+    to create new contacts in the phonebook.
+
+    :param arguments: str: Pass the arguments to the function
     """
+
     usage_info = '\nadd -h\nadd -n <name> -p <phone>'
     parser = argparse.ArgumentParser(prog='add', description='Create new contact', usage=usage_info)
     parser.add_argument("-n", dest="name", help='Contact name')
@@ -71,9 +67,13 @@ def add_parser(arguments: str) -> argparse.Namespace:
 
 def change_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The change_parser function takes a string of arguments and returns an argparse.Namespace object with the following attributes:
+        - name: The contact's name (str)
+        - phone: A phone number (str)
+        - email: An email address (str)
+        - birthday: A date of birth in format dd-mm-yyyy (str) 
+
+    :param arguments: str: Pass the command line arguments to the function
     """
     usage_info = '\nchange -h\nchange -n <name> -p <phone> -e\nchange -n <name> -p <phone> -r <phone>\nchange -n <name> -e <email>\nchange -n <name> -e <emeil> -r <emeil>\nchange -n <name> -b <birthday>'
     parser = argparse.ArgumentParser(prog='change', description='change contact or contact data', usage=usage_info)
@@ -88,10 +88,12 @@ def change_parser(arguments: str) -> argparse.Namespace:
 
 def del_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The del_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The function is used to parse the command line arguments for the del command.
+
+    :param arguments: str: Pass the command line arguments to the function
     """
+
     usage_info = '\ndel -h\ndel -n <name>\ndel -n <name> -p <phone>\ndel -n <name> -e <emeil>\ndel-n <name> -b <birthday>'
     parser = argparse.ArgumentParser(prog='del', description='delete contact or contact data', usage=usage_info)
     parser.add_argument("-n", dest="name", help='Contact name')
@@ -104,10 +106,13 @@ def del_parser(arguments: str) -> argparse.Namespace:
 
 def show_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The show_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The function uses the argparse module to create a parser that can be used to parse the command line arguments for show.
+    The parser is created with prog='show', description='display contact data', and usage=usage_info, where usage_info is set to '\nshow -h\nshow -a all\nshow -a &lt;name&gt;'.  The add_argument method adds an argument named &quot;-a&quot; which has dest=&quot;show&quot;, help='Use show -a &lt;all&gt; or show -a &lt;name&gt;'
+
+    :param arguments: str: Pass the arguments that are entered by the user
     """
+
     usage_info = '\nshow -h\nshow -a all\nshow -a <name>'
     parser = argparse.ArgumentParser(prog='show', description='display contact data', usage=usage_info)
     parser.add_argument("-a", dest="show", help='Use show -a <all> or show -a <name>')
@@ -117,10 +122,12 @@ def show_parser(arguments: str) -> argparse.Namespace:
 
 def search_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The search_parser function takes in a string of arguments and parses them using the argparse module.
+    It returns an object containing the parsed arguments.
+
+    :param arguments: str: Pass the command line arguments to the function
     """
+
     usage_info = '\nsearch -h\nsearch -s <key_word>'
     parser = argparse.ArgumentParser(prog='search', description='search', usage=usage_info)
     parser.add_argument("-s", dest="search", help='Search by keywords -s <key word>')
@@ -130,10 +137,12 @@ def search_parser(arguments: str) -> argparse.Namespace:
 
 def birth_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The birth_parser function takes a string of arguments and parses them using the argparse module.
+    The function returns an object containing the parsed arguments.
+
+    :param arguments: str: Pass in the command line arguments
     """
+
     usage_info = '\nbirth -h\nbirth -d <days>'
     parser = argparse.ArgumentParser(prog='birth', description='birth', usage=usage_info)
     parser.add_argument("-d", dest="days", help='Range of days')
@@ -143,10 +152,12 @@ def birth_parser(arguments: str) -> argparse.Namespace:
 
 def sort_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The sort_parser function takes in a string of arguments and returns an argparse.Namespace object.
+    The function uses the argparse module to parse the arguments, which are then returned as an object.
+
+    :param arguments: str: Pass in the arguments from the command line
     """
+
     usage_info = '\nsort -h\nsort -d sort -d <"Path">'
     parser = argparse.ArgumentParser(prog='sort', description='sort', usage=usage_info)
     parser.add_argument("-d", dest="directory", help='Path to directory')
@@ -156,13 +167,14 @@ def sort_parser(arguments: str) -> argparse.Namespace:
 
 def note_parser(arguments: str) -> argparse.Namespace:
     """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
+    The note_parser function takes a string of arguments and parses them into an argparse.Namespace object.
+    The function returns the Namespace object, which contains all the parsed arguments as attributes.
+
+    :param arguments: str: Pass in the arguments from the command line
     """
 
     usage_info = '\nnote -h\note -a <tag> -n <text note>\nnote -f <tag>\nnote -t <old_tag> -r <new_tag> -n\nnote -s all\nnote -d <tag>\nnote -n <note>\nnote -r <replace>'
-    parser = argparse.ArgumentParser(prog='note', description='note',usage=usage_info)
+    parser = argparse.ArgumentParser(prog='note', description='note', usage=usage_info)
     parser.add_argument("-a", dest="add", nargs='+', help='Add new note')
     parser.add_argument("-f", dest="find", help='Find note')
     parser.add_argument("-t", dest="tag", help='Tag')
@@ -175,26 +187,25 @@ def note_parser(arguments: str) -> argparse.Namespace:
         string = ''
         for element in args.note:
             string += element + ' '
-        args.note = string 
+        args.note = string
     return args
 
 
-def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
+def command_parser(user_command: str) -> tuple[list[str] | str, argparse.Namespace | None]:
     """
-    The command_parser function takes a user command as input and returns the
-    command name and arguments. The function first splits the user command into
-    a list of elements, where each element is separated by a space. If there are no
-    arguments, then it returns only the command name (the first element in the list). 
-    If there are arguments, then it uses argparse to parse them into an object that can be used later.
+    The command_parser function takes a user command as an argument and returns the parsed arguments.
+
+    :param user_command: str: Store the user input
     """
+
     command_elements = user_command.split(' ')
     if len(command_elements) < 2:
         arguments = None
         return command_elements[0], arguments
-      
+
     arguments = user_command.split(' ', 1)[1]
     if command_elements[0] not in LIST_COMMANDS:
-        temp_command = get_close_command(transformation_commands(LIST_COMMANDS, command_elements[0]))
+        temp_command: str | None = get_close_command(transformation_commands(LIST_COMMANDS, command_elements[0]))
         if temp_command:
             user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
             if user_input == 'y':
@@ -231,7 +242,16 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     else:
         print(f'Command [{command_elements[0]}] is not found!')
 
-def addressbook_controller(command: str, arguments: dict):
+
+def addressbook_controller(command: str | list, arguments: argparse.Namespace) -> None:
+    """
+    The addressbook_controller function is the main function of this program.
+    It takes a command and arguments as input, and then calls the appropriate functions to perform that command.
+
+    :param command: str | list: Determine which command was used
+    :param arguments: argparse.Namespace: Get the arguments from the command line
+    """
+
     if command == 'add':
         add_contact(arguments.name, arguments.phone)
     elif command == 'change':
@@ -261,14 +281,29 @@ def addressbook_controller(command: str, arguments: dict):
         serch_contact(arguments.search)
 
     elif command == 'birth':
-        serch_contact(arguments.days)
+        birthday_in_next_days(arguments.days)
 
-        
-def sort_controller(arguments: str):
+
+def sort_controller(arguments: str) -> None:
+    """
+    The sort_controller function is the main function that runs all of the other functions.
+    It takes in a string argument, which is what you type into your command line after 'sort_controller.py'.
+    The sort_controller function then parses this string and calls other functions to run based on what it finds.
+
+    :param arguments: str: Get the arguments from the command line
+    """
     run_sorting_files(arguments)
 
-      
-def note_controller(arguments: dict):
+
+def note_controller(arguments: argparse.Namespace) -> None:
+    """
+    The note_controller function is the main function that controls all of the note-related commands.
+    It takes in a Namespace object from argparse, which contains all of the arguments passed into it.
+    The first if statement checks to see if there are three arguments: tag, replace and note. If so, 
+    it calls edit_note with those three parameters.
+
+    :param arguments: argparse.Namespace: Pass the arguments from the command line to this function
+    """
     if arguments.tag and arguments.replace and arguments.note:
         edit_note(arguments.tag, arguments.replace, arguments.note)
     elif arguments.add and arguments.note:
@@ -280,9 +315,7 @@ def note_controller(arguments: dict):
         delete_note(arguments.delete)
     elif arguments.find:
         find_note(arguments.find)
-        
-    
-  
+
 
 def main() -> None:
     """
@@ -292,7 +325,7 @@ def main() -> None:
     if not user_command or user_command == '-h':
         print(INFO_MESSAGE)
         return
-    
+
     command, arguments = command_parser(user_command)
 
     if command in ADDRESSBOOK_COMMANDS and arguments:
