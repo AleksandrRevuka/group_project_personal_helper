@@ -256,6 +256,10 @@ def addressbook_controller(command: str, arguments: dict):
             print_contact(arguments.show)
     elif command == 'search':
         serch_contact(arguments.search)
+
+    elif command == 'birth':
+        serch_contact(arguments.days)
+
         
 def sort_controller(arguments: str):
     run_sorting_files(arguments)
