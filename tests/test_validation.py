@@ -4,11 +4,11 @@ import unittest
 from personal_helper.entities import User, Email, Phone
 from personal_helper.address_book import AddressBook as AB, Record
 from personal_helper.validation import (
-    verify_email,
-    verify_phone,
-    verify_name,
-    verify_birthday_date,
-    verify_criteria,
+    name_validation,
+    phone_validation,
+    email_validation,
+    birthday_date_validation,
+    criteria_validation,
     check_name_in_address_book,
     check_name_not_in_address_book,
     check_email_in_address_book,
@@ -29,7 +29,7 @@ class TestValidation(unittest.TestCase):
         email = 'test@sasha@gmail.com'
 
         with self.assertRaises(SystemExit) as context:
-            verify_email(email)
+            email_validation(email)
         self.assertEqual('Try again!', context.exception.code)
 
     def test_validation_email_with_valid_input(self) -> None:
@@ -40,7 +40,7 @@ class TestValidation(unittest.TestCase):
         email = "john.doe@example.com"
         expected_output = None
 
-        actual_output = verify_email(email)
+        actual_output = email_validation(email)
 
         self.assertEqual(actual_output, expected_output)
 
@@ -51,19 +51,19 @@ class TestValidation(unittest.TestCase):
         """
         phone = '+plus380951234567'
         with self.assertRaises(SystemExit) as context:
-            verify_phone(phone)
+            phone_validation(phone)
         self.assertEqual('Try again!', context.exception.code)
 
         phone = '3809'
         with self.assertRaises(SystemExit) as context:
-            verify_phone(phone)
+            phone_validation(phone)
         self.assertEqual('Try again!', context.exception.code)
 
         phone = '380951234567123456789'
         with self.assertRaises(SystemExit) as context:
-            verify_email(phone)
+            phone_validation(phone)
         self.assertEqual('Try again!', context.exception.code)
-        
+
     def test_phone_validation_with_valid_input(self) -> None:
         """
         The test_phone_validation_with_valid_input function tests the phone_validation function with a valid input.
@@ -71,7 +71,7 @@ class TestValidation(unittest.TestCase):
         """
         phone = "380631234567"
 
-        actual_output = verify_phone(phone)
+        actual_output = phone_validation(phone)
 
         self.assertFalse(actual_output, False)
 
@@ -83,31 +83,31 @@ class TestValidation(unittest.TestCase):
         """
         name_invalid_num = 12
         with self.assertRaises(SystemExit) as context:
-            verify_name(name_invalid_num)
+            name_validation(name_invalid_num)
         self.assertEqual('Try again!', context.exception.code)
 
         name = 'new_name'
         with self.assertRaises(SystemExit) as context:
-            verify_name(name)
+            name_validation(name)
         self.assertEqual('Try again!', context.exception.code)
 
         name = ''
         with self.assertRaises(SystemExit) as context:
-            verify_name(name)
+            name_validation(name)
         self.assertEqual('Try again!', context.exception.code)
 
         name = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         with self.assertRaises(SystemExit) as context:
-            verify_name(name)
+            name_validation(name)
         self.assertEqual('Try again!', context.exception.code)
-        
+
     def test_name_validation_with_valid_input(self) -> None:
         """
         The test_name_validation_with_valid_input function tests the name_validation function with a valid input.
         The expected output is False, and the actual output is also False.
         """
         name = "Alex"
-        actual_output = verify_name(name)
+        actual_output = name_validation(name)
         self.assertFalse(actual_output, False)
 
     def test_verify_birthday_date_with_invalid_input(self) -> None:
@@ -117,12 +117,12 @@ class TestValidation(unittest.TestCase):
         """
         birthday_date = '31-04-2000'
         with self.assertRaises(SystemExit) as context:
-            verify_birthday_date(birthday_date)
+            birthday_date_validation(birthday_date)
         self.assertEqual('Try again!', context.exception.code)
 
         birthday_date = '30-04-2030'
         with self.assertRaises(SystemExit) as context:
-            verify_birthday_date(birthday_date)
+            birthday_date_validation(birthday_date)
         self.assertEqual('Try again!', context.exception.code)
 
     def test_verify_criteria_with_invalid_input(self) -> None:
@@ -132,7 +132,7 @@ class TestValidation(unittest.TestCase):
         """
         criteria = '_'
         with self.assertRaises(SystemExit) as context:
-            verify_criteria(criteria)
+            criteria_validation(criteria)
         self.assertEqual('Try again!', context.exception.code)
 
     def test_check_name_in_address_book(self) -> None:
@@ -179,13 +179,13 @@ class TestValidation(unittest.TestCase):
         with self.assertRaises(SystemExit) as context:
             check_phone_number_in_address_book(contact, phone, name)
         self.assertEqual('Try again!', context.exception.code)
-    
+
     def test_check_phone_number_not_in_address_book(self) -> None:
         """
         The test_check_phone_number_not_in_address_book function checks if the phone number is already in the address book.
         If it is, then an error message will be displayed and the user will have to enter a new phone number.
         """
-        
+
         address_book = AB()
         name = "Alex"
         phone_test = Phone('3809991112233')
@@ -197,7 +197,7 @@ class TestValidation(unittest.TestCase):
         with self.assertRaises(SystemExit) as context:
             check_phone_number_not_in_address_book(contact, phone, name)
         self.assertEqual('Try again!', context.exception.code)
-    
+
     def test_check_email_in_address_book(self) -> None:
         """
         The test_check_email_in_address_book function checks if the email is already in the address book.
@@ -214,7 +214,7 @@ class TestValidation(unittest.TestCase):
         with self.assertRaises(SystemExit) as context:
             check_email_in_address_book(contact, email, name)
         self.assertEqual('Try again!', context.exception.code)
-    
+
     def test_check_email_not_in_address_book(self) -> None:
         """
         The test_check_email_not_in_address_book function checks if the email is already in the address book.
@@ -231,7 +231,7 @@ class TestValidation(unittest.TestCase):
         with self.assertRaises(SystemExit) as context:
             check_email_not_in_address_book(contact, email, name)
         self.assertEqual('Try again!', context.exception.code)
-        
-        
+
+
 if __name__ == '__main__':
     unittest.main()

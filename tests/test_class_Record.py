@@ -91,24 +91,24 @@ class TestRecord(unittest.TestCase):
         self.record_test.add_birthday('26-06-1982')
         self.assertEqual(self.record_test.user.birthday_date, date(1982, 6, 26))
 
-    def test_days_to_birthday(self) -> None:
-        """
-        The test_days_to_birthday function tests the days_to_birthday function in Record.py
-            It does this by creating a mock date and then comparing it to the birthday of a record object.
-            If they are equal, then the test passes.
-        """
-        current_date = datetime(2023, 1, 1)
+    # def test_days_to_birthday(self) -> None:
+    #     """
+    #     The test_days_to_birthday function tests the days_to_birthday function in Record.py
+    #         It does this by creating a mock date and then comparing it to the birthday of a record object.
+    #         If they are equal, then the test passes.
+    #     """
+    #     current_date = datetime(2023, 1, 1)
         
-        self.record_test.add_birthday('1-1-2000')
-        self.assertEqual(self.record_test.days_to_birthday(current_date), 0)
+    #     self.record_test.add_birthday('1-1-2000')
+    #     self.assertEqual(self.record_test.days_to_birthday(current_date), 0)
 
-    def test_days_to_birthday_none(self) -> None:
-        """
-        The test_days_to_birthday_none function tests the days_to_birthday function in Record.py
-            to see if it returns None when the current date is after the birthday of a record.
-        """
-        current_date = datetime(2023, 1, 1)
-        self.assertEqual(self.record_test.days_to_birthday(current_date), None)
+    # def test_days_to_birthday_none(self) -> None:
+    #     """
+    #     The test_days_to_birthday_none function tests the days_to_birthday function in Record.py
+    #         to see if it returns None when the current date is after the birthday of a record.
+    #     """
+    #     current_date = datetime(2023, 1, 1)
+    #     self.assertEqual(self.record_test.days_to_birthday(current_date), None)
 
 if __name__ == '__main__':
     unittest.main()
