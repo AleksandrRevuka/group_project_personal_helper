@@ -36,43 +36,45 @@ class SortingFiles:
 
     def sort_extensions(self) -> dict:
         """Повертає словник з груповими списками файлів зі шляхами"""
+        for adr in self.lst_files_addresses:
+            images_result = re.findall(r"([^/]+[/.](jpeg|png|jpg|svg|bmp))", str(adr))
 
-        for i in self.lst_files_addresses:
-            images_result = re.findall(r"([^/]+[/.](jpeg|png|jpg|svg|bmp))", str(i))
             if len(images_result) > 0:
-                for i in images_result:
-                    self.dict_extensions["images"].append(i[0])
-                    self.lst_known.append(i[0])
+                self.dict_extensions["images"].append(adr)
+                self.lst_known.append(images_result[0][1])
 
-            videos_result = re.findall(r"([^/]+[/.](avi|mp4|mov|mkv))", str(i))
+            videos_result = re.findall(r"([^/]+[/.](avi|mp4|mov|mkv))", str(adr))
             if len(videos_result) > 0:
-                for i in videos_result:
-                    self.dict_extensions["videos"].append(i[0])
-                    self.lst_known.append(i[0])
+                self.dict_extensions["videos"].append(adr)
+                self.lst_known.append(videos_result[0][1])
 
             documents_result = re.findall(
-                r"([^/]+[/.](docx|doc|txt|pdf|xlsx|pptx))", str(i)
+                r"([^/]+[/.](docx|doc|txt|pdf|xlsx|pptx))", str(adr)
             )
             if len(documents_result) > 0:
-                for i in documents_result:
-                    self.dict_extensions["documents"].append(i[0])
-                    self.lst_known.append(i[0])
+                self.dict_extensions["documents"].append(adr)
+                self.lst_known.append(documents_result[0][1])
 
-            audio_result = re.findall(r"([^/]+[/.](mp3|ogg|wav|amr))", str(i))
+            audio_result = re.findall(r"([^/]+[/.](mp3|ogg|wav|amr))", str(adr))
             if len(audio_result) > 0:
-                for i in audio_result:
-                    self.dict_extensions["audio"].append(i[0])
-                    self.lst_known.append(i[0])
+                self.dict_extensions["audio"].append(adr)
+                self.lst_known.append(audio_result[0][1])
 
-            archives_result = re.findall(r"([^/]+[/.](zip|gz|rar|tar))", str(i))
+            archives_result = re.findall(r"([^/]+[/.](zip|gz|rar|tar))", str(adr))
             if len(archives_result) > 0:
-                for i in archives_result:
-                    self.dict_extensions["archives"].append(i[0])
-                    self.lst_known.append(i[0])
+                self.dict_extensions["archives"].append(adr)
+                self.lst_known.append(archives_result[0][1])
+
+        list_known_files = []
+
+        for files_list in self.dict_extensions.values():
+            for file in files_list:
+                list_known_files.append(file)
 
         lst_unknown = list(
-            set(self.lst_files_addresses) - set(self.lst_known)
+            set(self.lst_files_addresses) - set(list_known_files)
         )  # визначаємо через множини невідомі розширення
+
         for i in lst_unknown:
             self.dict_extensions["unknown"].append(i)
         return self.dict_extensions
@@ -138,6 +140,7 @@ class SortingFiles:
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
                 try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
+                    # print(way, file_old_place, file_new_place, sep="\n")
                     os.rename(file_old_place, file_new_place)
                 except FileExistsError:
                     pass
