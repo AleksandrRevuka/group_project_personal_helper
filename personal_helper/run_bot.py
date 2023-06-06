@@ -50,7 +50,8 @@ from commands import (
     delete_note,
     show_all_notes,
     find_note,
-    add_note_to_data
+    add_note_to_data,
+    birthday_in_next_days
 )
 from utils import transformation_commands, get_close_command
 
@@ -117,6 +118,18 @@ def search_parser(arguments: str) -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(prog='search', description='search')
     parser.add_argument("-s", dest="search", help='Use search -s <key word>')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
+def birth_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    parser = argparse.ArgumentParser(prog='birth', description='birth')
+    parser.add_argument("-d", dest="days", help='Range of days')
     args = parser.parse_args(arguments.split())
     return args
 
@@ -197,6 +210,9 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     elif command_elements[0] == 'search':
         parsed_args = search_parser(arguments)
         return command_elements[0], parsed_args
+    elif command_elements[0] == 'birth':
+        parsed_args = birth_parser(arguments)
+        return command_elements[0], parsed_args
     elif command_elements[0] == 'sort':
         parsed_args = sort_parser(arguments)
         return command_elements[0], parsed_args
@@ -234,6 +250,8 @@ def addressbook_controller(command: str, arguments: dict):
             print_contact(arguments.show)
     elif command == 'search':
         serch_contact(arguments.search)
+    elif command == 'birth':
+        birthday_in_next_days(arguments.days)
         
 def sort_controller(arguments: str):
     run_sorting_files(arguments)
