@@ -1,3 +1,10 @@
+"""
+This module provides a class, SortingFiles, that can be used to sort files in a directory into different 
+categories based on their extensions.
+
+Classes:
+- SortingFiles: A class for sorting files into categories and organizing them in subfolders.
+"""
 import os
 from os.path import basename
 from pathlib import Path
@@ -5,9 +12,17 @@ import re
 
 
 class SortingFiles:
-    """Сортування файлів за типами.
-    Якщо файл з таким ім'ям вже відсортовано, він пропускається.
-    Файли зі старих папок видаляються, порожні папки також видаляються"""
+    """
+    SortingFiles class is used to sort files in a directory into different categories and organize them in subfolders.
+
+    Methods:
+    - __init__: Initialize the SortingFiles object.
+    - files_addresses: Get a list of all file addresses in the specified directory.
+    - sort_extensions: Sort the file addresses into different categories based on their extensions.
+    - removing_files: Move files from the main folder into subfolders based on their categories.
+    - del_empty_folders: Delete empty folders in the directory.
+
+    """
 
     def __init__(self, path: Path):
         self.path = path
@@ -23,19 +38,28 @@ class SortingFiles:
         }
 
     def files_addresses(self) -> list:
-        """Повертає список всіх файлів та папок зі шляхами"""
+        """
+        The files_addresses function takes a path object and returns a list of all the files in that directory.
+            It does this by using the glob function to find all items in the directory, then appending them to an 
+            empty list if they are not directories.
+        """
 
         items = self.path.glob(
             "**/*"
-        )  # рекурсивно проходить по всіх папках і повертає список шляхів з файлами
-        # items має додаткові системні дописи, тому його необхідно перетворити в str
+        )
         for item in items:
-            if not item.is_dir():  # якщо елемент не є папкою, то:
+            if not item.is_dir():
                 self.lst_files_addresses.append(str(item))
         return self.lst_files_addresses
 
     def sort_extensions(self) -> dict:
-        """Повертає словник з груповими списками файлів зі шляхами"""
+        """
+        The sort_extensions function takes a list of file addresses and sorts them into different categories 
+        based on their extensions.The function returns a dictionary with the following keys: 
+        images, videos, documents, audio, archives and unknown. 
+        Each key has a value that is a list of files with the corresponding extension.
+        """
+
         for adr in self.lst_files_addresses:
             images_result = re.findall(r"([^/]+[/.](jpeg|png|jpg|svg|bmp))", str(adr))
 
@@ -73,7 +97,7 @@ class SortingFiles:
 
         lst_unknown = list(
             set(self.lst_files_addresses) - set(list_known_files)
-        )  # визначаємо через множини невідомі розширення
+        )
 
         for i in lst_unknown:
             self.dict_extensions["unknown"].append(i)
@@ -81,20 +105,23 @@ class SortingFiles:
 
     def removing_files(self) -> None:
         """
-        Сортує файли по папках.
-        У випадку натрапляння на дублікат файлу, він пропускається
+        The removing_files function is used to move files from the main folder into subfolders.
+        The function creates a new folder for each file type and moves all files of that type into it.
+
+        :param self: Access the attributes and methods of a class
         """
 
-        # 1. Створимо необхідні папки в цільовій папці
         if len(self.dict_extensions["images"]) > 0:
             new_folder = self.path.joinpath("images")
-            try:  # Якщо папка вже існує, завдяки try, не буде помилки
+
+            try:
                 os.mkdir(new_folder)
             except FileExistsError:
                 pass
 
         if len(self.dict_extensions["videos"]) > 0:
             new_folder = self.path.joinpath("videos")
+
             try:
                 os.mkdir(new_folder)
             except FileExistsError:
@@ -102,6 +129,7 @@ class SortingFiles:
 
         if len(self.dict_extensions["documents"]) > 0:
             new_folder = self.path.joinpath("documents")
+
             try:
                 os.mkdir(new_folder)
             except FileExistsError:
@@ -109,6 +137,7 @@ class SortingFiles:
 
         if len(self.dict_extensions["audio"]) > 0:
             new_folder = self.path.joinpath("audio")
+
             try:
                 os.mkdir(new_folder)
             except FileExistsError:
@@ -116,6 +145,7 @@ class SortingFiles:
 
         if len(self.dict_extensions["archives"]) > 0:
             new_folder = self.path.joinpath("archives")
+
             try:
                 os.mkdir(new_folder)
             except FileExistsError:
@@ -123,108 +153,117 @@ class SortingFiles:
 
         if len(self.dict_extensions["unknown"]) > 0:
             new_folder = self.path.joinpath("unknown")
+
             try:
                 os.mkdir(new_folder)
             except FileExistsError:
                 pass
 
-        # 2. Перемістимо файли
         if len(self.dict_extensions["images"]) > 0:
             for way in self.dict_extensions["images"]:
-                # Виділимо ім'я файла зі шляху (from os.path import basename)
-                file_name = basename(way)  # os.basename
-                # Виділимо шлях до файлу
+                file_name = basename(way)
+
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
                 new_way = self.path.joinpath("images")
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
-                try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
-                    # print(way, file_old_place, file_new_place, sep="\n")
+
+                try:
                     os.rename(file_old_place, file_new_place)
                 except FileExistsError:
                     pass
 
         if len(self.dict_extensions["videos"]) > 0:
             for way in self.dict_extensions["videos"]:
-                # Виділимо ім'я файла зі шляху (from os.path import basename)
-                file_name = basename(way)  # os.basename
-                # Виділимо шлях до файлу
+
+                file_name = basename(way)
+
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
                 new_way = self.path.joinpath("videos")
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
-                try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
+
+                try:
                     os.rename(file_old_place, file_new_place)
                 except FileExistsError:
                     pass
 
         if len(self.dict_extensions["documents"]) > 0:
             for way in self.dict_extensions["documents"]:
-                # Виділимо ім'я файла зі шляху (from os.path import basename)
-                file_name = basename(way)  # os.basename
-                # Виділимо шлях до файлу
+
+                file_name = basename(way)
+
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
                 new_way = self.path.joinpath("documents")
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
-                try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
+
+                try:
                     os.rename(file_old_place, file_new_place)
                 except FileExistsError:
                     pass
 
         if len(self.dict_extensions["audio"]) > 0:
             for way in self.dict_extensions["audio"]:
-                # Виділимо ім'я файла зі шляху (from os.path import basename)
-                file_name = basename(way)  # os.basename
-                # Виділимо шлях до файлу
+
+                file_name = basename(way)
+
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
                 new_way = self.path.joinpath("audio")
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
-                try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
+
+                try:
                     os.rename(file_old_place, file_new_place)
                 except FileExistsError:
                     pass
 
         if len(self.dict_extensions["archives"]) > 0:
-            # print(lst_archives)
+
             for way in self.dict_extensions["archives"]:
-                # Виділимо ім'я файла зі шляху (from os.path import basename)
-                file_name = basename(way)  # os.basename
-                # Виділимо шлях до файлу
+
+                file_name = basename(way)
+
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
                 new_way = self.path.joinpath("archives")
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
-                try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
+
+                try:
                     os.rename(file_old_place, file_new_place)
                 except FileExistsError:
                     pass
 
         if len(self.dict_extensions["unknown"]) > 0:
             for way in self.dict_extensions["unknown"]:
-                # Виділимо ім'я файла зі шляху (from os.path import basename)
-                file_name = basename(way)  # os.basename
-                # Виділимо шлях до файлу
+
+                file_name = basename(way)
+
                 len_file_name = len(file_name)
                 way_without_file_name = way[:-len_file_name]
                 new_way = self.path.joinpath("unknown")
                 file_old_place = os.path.join(way_without_file_name, file_name)
                 file_new_place = os.path.join(new_way, file_name)
-                try:  # Якщо такий файл вже існує, його дублікат не переноситься, а залишається на старому місці
+
+                try:
                     os.rename(file_old_place, file_new_place)
                 except FileExistsError:
                     pass
 
-    def del_empty_folders(self, way=None) -> None:
-        """Видаляє порожні теки на всіх рівнях вкладення"""
-        for address, dirs, files in os.walk(self.path):
-            for d in dirs:  # Для всіх папок (і вкладених також) в self.path
-                way = os.path.join(address, d)  # Створює шляхи до всіх папок
-                if not os.listdir(way):  # Якщо папка порожня
-                    os.rmdir(way)  # Видалення порожньої папки
+    def del_empty_folders(self, way: str | None = None) -> None:
+        """
+        The del_empty_folders function deletes empty folders in the directory.
+
+        :param way: Specify the path of the directory
+        """
+
+        for address, dirs, files in os.walk(self.path, topdown=False):
+            for d in dirs:
+                way = os.path.join(address, d)
+                if not os.listdir(way):
+                    os.rmdir(way)

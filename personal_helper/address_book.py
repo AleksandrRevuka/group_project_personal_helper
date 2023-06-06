@@ -10,7 +10,7 @@ import calendar
 import re
 import pickle
 from datetime import datetime
-from typing import Union, Iterator, Any, List
+from typing import Union, Any, List
 from collections import UserDict
 
 from entities import Phone, User, Email
@@ -209,12 +209,7 @@ class Record:
                 return days_to_bd
             else:
                 next_year = current_date.year + 1
-                """
-                If the user has a birthday on the 29.02 and this year is leap year,
-                but the date is already in the past, the date stays unchanged,
-                however the next year is not leap. Thus it should be replaced
-                with 28.02 and the next year
-                """
+
                 if has_29_february:
                     if calendar.isleap(next_year):
                         next_birthday = next_birthday.replace(year=next_year, day=29)

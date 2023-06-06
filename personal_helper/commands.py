@@ -1,23 +1,25 @@
 import os.path
+from pathlib import Path
+
 from utils import sanitize_phone_number
 from validation import (
-    verify_name,
-    verify_phone,
-    verify_email,
-    verify_birthday_date,
-    verify_criteria,
+    name_validation,
+    phone_validation,
+    email_validation,
+    birthday_date_validation,
+    criteria_validation,
     check_name_in_address_book,
     check_name_not_in_address_book,
     check_phone_number_in_address_book,
     check_phone_number_not_in_address_book,
     check_email_in_address_book,
     check_email_not_in_address_book,
-    check_path_address_to_sort_files_in_it
+    check_path_address_to_sort_files_in_it,
+    check_birthday_in_next_days
 )
 from constants import FILE
 from address_book import Record, AddressBook as AB
 from entities import Phone, User, Email
-from pathlib import Path
 from print_table import TablePrinter
 from sorting_files import SortingFiles
 from notes import Notes
@@ -28,7 +30,7 @@ def load_contact_book() -> AB:
     The load_contact_book function loads the contact book from a file.
     If the file does not exist, it creates an empty contact book.
     """
-    
+
     addressbook = AB()
     if os.path.exists(FILE):
         addressbook.read_records_from_file(FILE)
@@ -45,12 +47,12 @@ def add_contact(contact_name: str, phone_number: str | None = None) -> None:
     """
     addressbook = load_contact_book()
     check_name_in_address_book(addressbook, contact_name)
-    verify_name(contact_name)
+    name_validation(contact_name)
     user = User(contact_name)
     contact = Record(user)
     if phone_number:
         phone_number = sanitize_phone_number(phone_number)
-        verify_phone(phone_number)
+        phone_validation(phone_number)
         phone = Phone(phone_number)
         contact.add_phone_number(phone)
     addressbook.add_record(contact)
@@ -124,7 +126,7 @@ def add_phone_number_to_contact(contact_name: str, phone_number: str) -> None:
     """
     addressbook = load_contact_book()
     phone_number = sanitize_phone_number(phone_number)
-    verify_phone(phone_number)
+    phone_validation(phone_number)
     phone = Phone(phone_number)
 
     check_name_not_in_address_book(addressbook, contact_name)
@@ -158,12 +160,12 @@ def change_phone_number_contact(
     contact = addressbook.get_contact(contact_name)
 
     old_phone_number = sanitize_phone_number(old_phone_number)
-    verify_phone(old_phone_number)
+    phone_validation(old_phone_number)
     old_phone = Phone(old_phone_number)
     check_phone_number_not_in_address_book(contact, old_phone, contact_name)
 
     new_phone_number = sanitize_phone_number(new_phone_number)
-    verify_phone(new_phone_number)
+    phone_validation(new_phone_number)
     new_phone = Phone(new_phone_number)
     check_phone_number_in_address_book(contact, new_phone, contact_name)
 
@@ -213,7 +215,7 @@ def add_email_to_contact(contact_name: str, contact_email: str) -> None:
 
     contact = addressbook.get_contact(contact_name)
 
-    verify_email(contact_email)
+    email_validation(contact_email)
     email = Email(contact_email)
 
     check_email_in_address_book(contact, email, contact_name)
@@ -252,7 +254,7 @@ def change_email_contact(
     old_email = Email(contact_old_email)
     check_email_not_in_address_book(contact, old_email, contact_name)
 
-    verify_email(contact_new_email)
+    email_validation(contact_new_email)
     new_email = Email(contact_new_email)
 
     check_email_in_address_book(contact, new_email, contact_name)
@@ -301,7 +303,7 @@ def add_birthday_to_contact(contact_name: str, birthday_date: str) -> None:
 
     contact = addressbook.get_contact(contact_name)
 
-    verify_birthday_date(birthday_date)
+    birthday_date_validation(birthday_date)
     contact.add_birthday(birthday_date)
 
     addressbook.add_record(contact)
@@ -320,7 +322,7 @@ def serch_contact(criteria: str) -> None:
     """
     addressbook = load_contact_book()
     criteria = criteria.lower()
-    verify_criteria(criteria)
+    criteria_validation(criteria)
 
     result = addressbook.search(criteria)
 
@@ -376,16 +378,20 @@ def print_contacts(addressbook: AB = None) -> None:
     table_ful = TablePrinter(table)
     table_ful.print_table()
 
-    
+
 def birthday_in_next_days(days_interval: str) -> None:
     """
-    Returns users, who have birthday within the next days.
+    The birthday_in_next_days function takes a string as an argument and returns None.
+    The function checks if the input is valid, then loads the address book from file.
+    It iterates through each contact in the address book and checks if they have a birthday date set. If so, 
+    it calculates how many days are left until their birthday using days_to_birthday() method of User class. 
+    If this number is less than or equal to user's input (days interval), it adds that contact to 
+    contacts_with_birthday dictionary which will be printed at the end.
+
+    :param days_interval: str: Specify the number of days from today to search for birthdays
     """
 
-    try:
-        next_days = int(days_interval)
-    except ValueError:
-        raise ValueError("The days parameter should be a digit. Try again!")
+    check_birthday_in_next_days(days_interval)
 
     contacts_with_birthday = AB()
     addressbook = load_contact_book()
@@ -393,14 +399,23 @@ def birthday_in_next_days(days_interval: str) -> None:
     for contact in addressbook.values():
         if contact.user.birthday_date:
             days_to_birthday = contact.days_to_birthday()
-            if days_to_birthday <= next_days:
+            if days_to_birthday <= int(days_interval):
                 contacts_with_birthday.add_record(contact)
+    if len(contacts_with_birthday) == 0:
+        print(f"No users have a birthday within the next {days_interval} days.")
+    else:
+        print_contacts(contacts_with_birthday)
 
-    print_contacts(contacts_with_birthday)
 
+def run_sorting_files(address: str) -> None:
+    """
+    The run_sorting_files function sorts files in a given directory.
+        It takes the address of the directory as an argument and returns None.
+        The function checks if the path is valid, creates an instance of SortingFiles class, 
+        calls its methods to sort files by their extensions and remove empty folders.
 
-def run_sorting_files(address: str):
-    """Sorts the files in the specified folder"""
+    :param address: str: Get the address of the directory that we want to sort
+    """
     path = Path(address)
     check_path_address_to_sort_files_in_it(path)
 
@@ -412,18 +427,25 @@ def run_sorting_files(address: str):
     print(f'Directory {address} has been sorted succesfully!')
 
 
-def add_note_to_data(tags: list, text=''):
-    """Adds notes with tags. If no tag is specified, a default tag is assigned"""
+def add_note_to_data(tags: list, text: str = '') -> None:
+    """
+    The add_note_to_data function adds notes with tags. If no tag is specified, a default tag is assigned
+
+    :param tags: list: Specify the tags that will be assigned to the note
+    :param text: Specify the text of the note
+    """
     note = Notes()
     note.load()
     note.add_note(tags, text)
     note.save()
 
 
-def find_note(key_word=''):
+def find_note(key_word: str = '') -> None:
     """
-    Search by keyword/letter/symbol.
+    The find_note function searches for a note by keyword/letter/symbol.
     The search is conducted by tags and by the text of the notes at the same time.
+
+    :param key_word: str: Specify the keyword to search for
     """
     note = Notes()
     note.load()
@@ -431,26 +453,45 @@ def find_note(key_word=''):
     print('The search is over!')
 
 
-def show_all_notes():
-    """Displays notes sorted by tags."""
+def show_all_notes() -> None:
+    """
+    The show_all_notes function is used to display all the notes in the Notes.txt file.
+    The function first loads all of the notes from Notes.txt into a list, then sorts them by date and time,
+    and finally displays them on screen.
+    """
+
     note = Notes()
     note.load()
     note.show_all_sorted_notes()
     note.save()
 
 
-def delete_note(tag: str):
-    """Deleting notes."""
+def delete_note(tag: str) -> None:
+    """
+    The delete_note function deletes a note from the notes.txt file.
+
+    :param tag: str: Specify which note to delete
+    """
+
     note = Notes()
     note.load()
     note.del_notes(tag)
     note.save()
 
 
-def edit_note(tag: str, new_tag: list, new_text: str):
-    """Editing notes."""
+def edit_note(tag: str, new_tag: list, new_text: str) -> None:
+    """
+    The edit_note function allows the user to edit a note.
+    The function takes in three parameters: tag, new_tag, and new_text.
+    Tag is the name of the note that will be edited. New_tag is a list of tags that will replace old ones for this note. 
+    New text is what replaces old text for this note.
+
+    :param tag: str: Find the note that is to be edited
+    :param new_tag: list: Allow the user to add multiple tags to a note
+    :param new_text: str: Change the text of a note
+    """
+
     note = Notes()
     note.load()
     note.edit_notes(tag, new_tag, new_text)
     note.save()
-
