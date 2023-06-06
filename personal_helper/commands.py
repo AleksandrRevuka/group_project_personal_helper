@@ -377,26 +377,26 @@ def print_contacts(addressbook: AB = None) -> None:
     table_ful.print_table()
 
     
-    def birthday_in_next_days(self, days_interval: str) -> None:
-        """
-        Returns users, who have birthday within the next days.
-        """
+def birthday_in_next_days(days_interval: str) -> None:
+    """
+    Returns users, who have birthday within the next days.
+    """
 
-        try:
-            next_days = int(days_interval)
-        except ValueError:
-            raise ValueError("The days parameter should be a digit. Try again!")
+    try:
+        next_days = int(days_interval)
+    except ValueError:
+        raise ValueError("The days parameter should be a digit. Try again!")
 
-        contacts_with_birthday = AB()
-        addressbook = load_contact_book()
+    contacts_with_birthday = AB()
+    addressbook = load_contact_book()
 
-        for contact in addressbook.values():
-            if contact.user.birthday_date:
-                days_to_birthday = contact.days_to_birthday()
-                if days_to_birthday <= next_days:
-                    contacts_with_birthday.add_record(contact)
+    for contact in addressbook.values():
+        if contact.user.birthday_date:
+            days_to_birthday = contact.days_to_birthday()
+            if days_to_birthday <= next_days:
+                contacts_with_birthday.add_record(contact)
 
-        print_contacts(contacts_with_birthday)
+    print_contacts(contacts_with_birthday)
 
 
 def run_sorting_files(address: str):
