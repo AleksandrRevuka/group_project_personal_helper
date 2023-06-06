@@ -61,7 +61,8 @@ def add_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='add', description='add', usage='\nadd -h\nadd -n <name> -p <phone>')
+    usage_info = '\nadd -h\nadd -n <name> -p <phone>'
+    parser = argparse.ArgumentParser(prog='add', description='Create new contact', usage=usage_info)
     parser.add_argument("-n", dest="name", help='Contact name')
     parser.add_argument("-p", dest="phone", help='Number of phone')
     args = parser.parse_args(arguments.split())
@@ -74,10 +75,11 @@ def change_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='change', description='change contact or contact data')
+    usage_info = '\nchange -h\nchange -n <name> -p <phone> -e\nchange -n <name> -p <phone> -r <phone>\nchange -n <name> -e <email>\nchange -n <name> -e <emeil> -r <emeil>\nchange -n <name> -b <birthday>'
+    parser = argparse.ArgumentParser(prog='change', description='change contact or contact data', usage=usage_info)
     parser.add_argument("-n", dest="name", help='Contact name')
-    parser.add_argument("-p", dest="phone", help='Number of phone')
-    parser.add_argument("-e", dest="email", help='email')
+    parser.add_argument("-p", dest="phone", help='Phone Number')
+    parser.add_argument("-e", dest="email", help='User Email')
     parser.add_argument("-b", dest="birthday", help='Date of birth in format dd-mm-yyyy')
     parser.add_argument("-r", dest="replace", help='This argument use only after -p or -e')
     args = parser.parse_args(arguments.split())
@@ -90,10 +92,12 @@ def del_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='del', description='delete contact or contact data')
+    usage_info = '\ndel -h\ndel -n <name>\ndel -n <name> -p <phone>\ndel -n <name> -e <emeil>\ndel-n <name> -b <birthday>'
+    parser = argparse.ArgumentParser(prog='del', description='delete contact or contact data', usage=usage_info)
     parser.add_argument("-n", dest="name", help='Contact name')
-    parser.add_argument("-p", dest="phone", help='Number of phone')
-    parser.add_argument("-e", dest="email", help='email')
+    parser.add_argument("-p", dest="phone", help='Phone Number')
+    parser.add_argument("-e", dest="email", help='User Email')
+    parser.add_argument("-b", dest="birthday", help='Date of birth in format dd-mm-yyyy')
     args = parser.parse_args(arguments.split())
     return args
 
@@ -104,8 +108,9 @@ def show_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='show', description='dicplay contact data')
-    parser.add_argument("-a", dest="show", help='Use show -a all or show -a <contact_name>')
+    usage_info = '\nshow -h\nshow -a all\nshow -a <name>'
+    parser = argparse.ArgumentParser(prog='show', description='display contact data', usage=usage_info)
+    parser.add_argument("-a", dest="show", help='Use show -a <all> or show -a <name>')
     args = parser.parse_args(arguments.split())
     return args
 
@@ -116,20 +121,9 @@ def search_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='search', description='search')
-    parser.add_argument("-s", dest="search", help='Use search -s <key word>')
-    args = parser.parse_args(arguments.split())
-    return args
-
-
-def birth_parser(arguments: str) -> argparse.Namespace:
-    """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
-    """
-    parser = argparse.ArgumentParser(prog='birth', description='birth')
-    parser.add_argument("-d", dest="days", help='Range of days')
+    usage_info = '\nsearch -h\nsearch -s <key_word>'
+    parser = argparse.ArgumentParser(prog='search', description='search', usage=usage_info)
+    parser.add_argument("-s", dest="search", help='Search by keywords -s <key word>')
     args = parser.parse_args(arguments.split())
     return args
 
@@ -153,7 +147,8 @@ def sort_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='sort', description='sort', usage='\nsort -h\nsort -d "D:\path\\to\directory"')
+    usage_info = '\nsort -h\nsort -d sort -d <"Path">'
+    parser = argparse.ArgumentParser(prog='sort', description='sort', usage=usage_info)
     parser.add_argument("-d", dest="directory", help='Path to directory')
     args = parser.parse_args(arguments.split())
     return args
@@ -165,16 +160,17 @@ def note_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='note', description='note')
-    parser.add_argument("-a", dest="add", nargs='?', default='', help='add new tag')
-    parser.add_argument("-f", dest="find", help='find note')
-    parser.add_argument("-t", dest="tag", help='tag')
-    parser.add_argument("-s", dest="show", help='show all note')
-    parser.add_argument("-d", dest="delete", help='delete note')
-    parser.add_argument("-n", dest="note", type=str, nargs='+', help='note text')
-    parser.add_argument("-r", dest="replace", nargs='+', help='new tag')
-    args = parser.parse_args(arguments.split(' '))
-    print(args.add)
+
+    usage_info = '\nnote -h\note -a <tag> -n <text note>\nnote -f <tag>\nnote -t <old_tag> -r <new_tag> -n\nnote -s all\nnote -d <tag>\nnote -n <note>\nnote -r <replace>'
+    parser = argparse.ArgumentParser(prog='note', description='note',usage=usage_info)
+    parser.add_argument("-a", dest="add", nargs='+', help='Add new note')
+    parser.add_argument("-f", dest="find", help='Find note')
+    parser.add_argument("-t", dest="tag", help='Tag')
+    parser.add_argument("-s", dest="show", help='Show all note')
+    parser.add_argument("-d", dest="delete", help='Delete notes')
+    parser.add_argument("-n", dest="note", type=str, nargs='+', help='Note text')
+    parser.add_argument("-r", dest="replace", nargs='+', help='New tag')
+    args = parser.parse_args(arguments.split())
     if args.note:
         string = ''
         for element in args.note:
@@ -264,7 +260,7 @@ def addressbook_controller(command: str, arguments: dict):
     elif command == 'search':
         serch_contact(arguments.search)
     elif command == 'birth':
-        birthday_in_next_days(arguments.days)
+        serch_contact(arguments.days)
         
 def sort_controller(arguments: str):
     run_sorting_files(arguments)
@@ -273,7 +269,8 @@ def sort_controller(arguments: str):
 def note_controller(arguments: dict):
     if arguments.tag and arguments.replace and arguments.note:
         edit_note(arguments.tag, arguments.replace, arguments.note)
-    elif arguments.note:
+    elif arguments.add and arguments.note:
+        print(arguments.add)
         add_note_to_data(arguments.add, arguments.note)
     elif arguments.show == 'all':
         show_all_notes()
@@ -309,4 +306,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-    
