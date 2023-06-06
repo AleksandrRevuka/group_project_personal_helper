@@ -128,25 +128,14 @@ def search_parser(arguments: str) -> argparse.Namespace:
     return args
 
 
-def birth_parser(arguments: str) -> argparse.Namespace:
-    """
-    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
-    The Namespace object contains the values of all the arguments passed in as attributes, which 
-    can be accessed by name.
-    """
-    parser = argparse.ArgumentParser(prog='birth', description='birth')
-    parser.add_argument("-d", dest="days", help='Range of days')
-    args = parser.parse_args(arguments.split())
-    return args
-
-
 def sort_parser(arguments: str) -> argparse.Namespace:
     """
     The build_parser function takes a string of arguments and returns an argparse.Namespace object.
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    parser = argparse.ArgumentParser(prog='sort', description='sort', usage='\nsort -h\nsort -d "D:\path\\to\directory"')
+    usage_info = '\nsort -h\nsort -d sort -d <"Path">'
+    parser = argparse.ArgumentParser(prog='sort', description='sort', usage=usage_info)
     parser.add_argument("-d", dest="directory", help='Path to directory')
     args = parser.parse_args(arguments.split())
     return args
@@ -158,18 +147,17 @@ def note_parser(arguments: str) -> argparse.Namespace:
     The Namespace object contains the values of all the arguments passed in as attributes, which 
     can be accessed by name.
     """
-    usage_info = '\nnote -h\nnote -a <add>'
+
+    usage_info = '\nnote -h\note -a <tag> -n <text note>\nnote -f <tag>\nnote -t <old_tag> -r <new_tag> -n\nnote -s all\nnote -d <tag>\nnote -n <note>\nnote -r <replace>'
     parser = argparse.ArgumentParser(prog='note', description='note',usage=usage_info)
     parser.add_argument("-a", dest="add", nargs='+', help='Add new note')
-
-    parser.add_argument("-f", dest="find", help='find note')
-    parser.add_argument("-t", dest="tag", help='tag')
-    parser.add_argument("-s", dest="show", help='show all note')
-    parser.add_argument("-d", dest="delete", help='delete note')
-    parser.add_argument("-n", dest="note", type=str, nargs='+', help='note text')
-    parser.add_argument("-r", dest="replace", nargs='+', help='new tag')
-    args = parser.parse_args(arguments.split(' '))
-    print(args.add)
+    parser.add_argument("-f", dest="find", help='Find note')
+    parser.add_argument("-t", dest="tag", help='Tag')
+    parser.add_argument("-s", dest="show", help='Show all note')
+    parser.add_argument("-d", dest="delete", help='Delete notes')
+    parser.add_argument("-n", dest="note", type=str, nargs='+', help='Note text')
+    parser.add_argument("-r", dest="replace", nargs='+', help='New tag')
+    args = parser.parse_args(arguments.split())
     if args.note:
         string = ''
         for element in args.note:
@@ -218,9 +206,6 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     elif command_elements[0] == 'search':
         parsed_args = search_parser(arguments)
         return command_elements[0], parsed_args
-    elif command_elements[0] == 'birth':
-        parsed_args = birth_parser(arguments)
-        return command_elements[0], parsed_args
     elif command_elements[0] == 'sort':
         parsed_args = sort_parser(arguments)
         return command_elements[0], parsed_args
@@ -258,8 +243,6 @@ def addressbook_controller(command: str, arguments: dict):
             print_contact(arguments.show)
     elif command == 'search':
         serch_contact(arguments.search)
-    elif command == 'birth':
-        birthday_in_next_days(arguments.days)
         
 def sort_controller(arguments: str):
     run_sorting_files(arguments)
@@ -268,7 +251,8 @@ def sort_controller(arguments: str):
 def note_controller(arguments: dict):
     if arguments.tag and arguments.replace and arguments.note:
         edit_note(arguments.tag, arguments.replace, arguments.note)
-    elif arguments.note:
+    elif arguments.add and arguments.note:
+        print(arguments.add)
         add_note_to_data(arguments.add, arguments.note)
     elif arguments.show == 'all':
         show_all_notes()
