@@ -6,6 +6,7 @@ This module defines the following classes:
     - Record: A class representing a contact record in the address book.
 """
 
+import calendar
 import re
 import pickle
 from datetime import datetime
@@ -20,11 +21,11 @@ class AddressBook(UserDict):
     A class that represents an address book containing contact records.
     """
 
-    def get_contact(self, name: str) -> 'Record':
+    def get_contact(self, name: str) -> "Record":
         """Returns the contact record for the given name."""
         return self.data[name]
 
-    def add_record(self, record: 'Record') -> None:
+    def add_record(self, record: "Record") -> None:
         """
         Adds a new contact record to the address book.
         """
@@ -94,7 +95,7 @@ class Record:
 
     Attributes:
         user (User): The User object representing the user details of the contact.
-        phone_numbers (List[Record.Subrecord]): A list of Subrecord objects representing the phone numbers of 
+        phone_numbers (List[Record.Subrecord]): A list of Subrecord objects representing the phone numbers of
         the contact.
         emails (List[Record.Subrecord]): A list of Subrecord objects representing the emails of the contact.
 
@@ -122,8 +123,8 @@ class Record:
 
     def __init__(self, user: User):
         self.user = user
-        self.phone_numbers: List['Record.Subrecord'] = []
-        self.emails: List['Record.Subrecord'] = []
+        self.phone_numbers: List["Record.Subrecord"] = []
+        self.emails: List["Record.Subrecord"] = []
 
     def add_phone_number(self, phone_number: Phone) -> None:
         """
@@ -139,7 +140,9 @@ class Record:
         subrecord_email = self.Subrecord(email)
         self.emails.append(subrecord_email)
 
-    def change_phone_number(self, old_phone_number: Phone, new_phone_number: Phone) -> None:
+    def change_phone_number(
+        self, old_phone_number: Phone, new_phone_number: Phone
+    ) -> None:
         """
         Updates an existing phone number for the contact.
         """
@@ -179,22 +182,47 @@ class Record:
         """
         Add a birthday data to the contact.
         """
-        birthday = datetime.strptime(birthday_date, '%d-%m-%Y').date()
+        birthday = datetime.strptime(birthday_date, "%d-%m-%Y").date()
         self.user.birthday_date = birthday
 
-    def days_to_birthday(self, current_date: datetime | None = None) -> int | None:
+    def days_to_birthday(self) -> int | None:
         """
         Calculate the number of days to the next birthday.
         """
-        if current_date is None:
-            current_date = datetime.now()
 
         birthday = self.user.birthday_date
-        if birthday is None:
-            return None
+        if birthday:
+            # current_date = datetime(2020, 6, 5)
+            # current_date = datetime(2020, 1, 5)
+            current_date = datetime.now()
+            has_29_february = False
 
-        next_birthday = datetime(current_date.year, birthday.month, birthday.day)
+            if birthday.day == 29 and birthday.month == 2:
+                has_29_february = True
 
-        next_birthday = datetime(current_date.year + 1, birthday.month, birthday.day)
+            if has_29_february and not calendar.isleap(current_date.year):
+                birthday = birthday.replace(day=28)
 
-        return (next_birthday - current_date).days
+            next_birthday = datetime(current_date.year, birthday.month, birthday.day)
+
+            if (days_to_bd := (next_birthday - current_date).days) > 0:
+                return days_to_bd
+            else:
+                next_year = current_date.year + 1
+                """
+                If the user has a birthday on the 29.02 and this year is leap year,
+                but the date is already in the past, the date stays unchanged,
+                however the next year is not leap. Thus it should be replaced
+                with 28.02 and the next year
+                """
+                if has_29_february:
+                    if calendar.isleap(next_year):
+                        next_birthday = next_birthday.replace(year=next_year, day=29)
+                    else:
+                        next_birthday = next_birthday.replace(year=next_year, day=28)
+                else:
+                    next_birthday = next_birthday.replace(year=next_year)
+
+                days_to_bd = (next_birthday - current_date).days
+
+                return days_to_bd
