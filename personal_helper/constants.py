@@ -20,3 +20,6 @@ NAME_RANGE = range(1, 50)
 PHONE_RANGE = range(7, 20)
 
 ADDRESSBOOK_COMMANDS = ['add', 'change', 'del', 'show', 'search']
+LIST_COMMANDS = ['add', 'change', 'del', 'show', 'search', 'note', 'sort']
+
+INFO_MESSAGE = 'Use command:\nadd\nchange\ndel\nshow\nsearch\nnote\nsort\n\nDetail about command:\n[command] -h'
