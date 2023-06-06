@@ -145,10 +145,11 @@ def check_email_not_in_address_book(contact: Record, email: Email, contact_name:
 
 
 @input_error
-def check_path_address_to_sort_files_in_it(path: Path):
+def check_path_address_to_sort_files_in_it(path: Path) -> None:
     """Checks if the path (for sorting files) exists and if it points to a folder"""
     if not path.exists():
         raise ValueError('The way is not exists!')
-    elif os.path.isfile(path):
+    if os.path.isfile(path):
         raise ValueError('The path points to a file! Must point to a folder!')
+
 

@@ -384,8 +384,8 @@ def birthday_in_next_days(days_interval: str) -> None:
 
     try:
         next_days = int(days_interval)
-    except ValueError:
-        raise ValueError("The days parameter should be a digit. Try again!")
+    except ValueError as error:
+        raise ValueError("The days parameter should be a digit. Try again!") from error
 
     contacts_with_birthday = AB()
     addressbook = load_contact_book()
@@ -395,8 +395,10 @@ def birthday_in_next_days(days_interval: str) -> None:
             days_to_birthday = contact.days_to_birthday()
             if days_to_birthday <= next_days:
                 contacts_with_birthday.add_record(contact)
-
-    print_contacts(contacts_with_birthday)
+    if len(contacts_with_birthday) == 0:
+        print(f"No users have a birthday within the next {next_days} days.")
+    else:
+        print_contacts(contacts_with_birthday)
 
 
 def run_sorting_files(address: str):
