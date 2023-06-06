@@ -12,8 +12,7 @@ from validation import (
     check_phone_number_not_in_address_book,
     check_email_in_address_book,
     check_email_not_in_address_book,
-    check_path_address_to_sort_files_in_it,
-    check_file_address_to_load_notes_from_it,
+    check_path_address_to_sort_files_in_it
 )
 from constants import FILE
 from address_book import Record, AddressBook as AB

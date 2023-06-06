@@ -26,7 +26,12 @@ from sys import argv
 import os.path
 
 from address_book import AddressBook
-from constants import ADDRESSBOOK_COMMANDS
+from constants import (
+    ADDRESSBOOK_COMMANDS, 
+    LIST_COMMANDS,
+    INFO_MESSAGE
+)
+
 from commands import (
     add_contact,
     add_phone_number_to_contact,
@@ -39,7 +44,13 @@ from commands import (
     delete_contact,
     print_contacts,
     print_contact,
-    serch_contact
+    serch_contact,
+    run_sorting_files,
+    edit_note,
+    delete_note,
+    show_all_notes,
+    find_note,
+    add_note_to_data
 )
 from utils import transformation_commands, get_close_command
 
@@ -110,6 +121,18 @@ def search_parser(arguments: str) -> argparse.Namespace:
     return args
 
 
+def sort_parser(arguments: str) -> argparse.Namespace:
+    """
+    The build_parser function takes a string of arguments and returns an argparse.Namespace object.
+    The Namespace object contains the values of all the arguments passed in as attributes, which 
+    can be accessed by name.
+    """
+    parser = argparse.ArgumentParser(prog='sort', description='sort', usage='\nsort -h\nsort -d "D:\path\\to\directory"')
+    parser.add_argument("-d", dest="directory", help='Path to directory')
+    args = parser.parse_args(arguments.split())
+    return args
+
+
 def note_parser(arguments: str) -> argparse.Namespace:
     """
     The build_parser function takes a string of arguments and returns an argparse.Namespace object.
@@ -117,8 +140,19 @@ def note_parser(arguments: str) -> argparse.Namespace:
     can be accessed by name.
     """
     parser = argparse.ArgumentParser(prog='note', description='note')
-    parser.add_argument("-a", dest="add", help='add new note')
+    parser.add_argument("-a", dest="add", nargs='+', help='add new tag')
+    parser.add_argument("-f", dest="find", help='find note')
+    parser.add_argument("-t", dest="tag", help='tag')
+    parser.add_argument("-s", dest="show", help='show all note')
+    parser.add_argument("-d", dest="delete", help='delete note')
+    parser.add_argument("-n", dest="note", type=str, nargs='+', help='note text')
+    parser.add_argument("-r", dest="replace", nargs='+', help='new tag')
     args = parser.parse_args(arguments.split())
+    if args.note:
+        string = ''
+        for element in args.note:
+            string += element + ' '
+        args.note = string 
     return args
 
 
@@ -136,16 +170,16 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
         return command_elements[0], arguments
       
     arguments = user_command.split(' ', 1)[1]
-
-    user_input = ''
-    if command_elements[0] not in ADDRESSBOOK_COMMANDS:
-        temp_command = get_close_command(transformation_commands(ADDRESSBOOK_COMMANDS, command_elements[0]))
-        
-        if temp_command is not None:
+    if command_elements[0] not in LIST_COMMANDS:
+        temp_command = get_close_command(transformation_commands(LIST_COMMANDS, command_elements[0]))
+        if temp_command:
             user_input = input(f'Did you mean command [{temp_command}]? y/n -> ')
-        
-    if user_input == 'y':
-        command_elements[0] = temp_command
+            if user_input == 'y':
+                command_elements[0] = temp_command
+            else:
+                print(INFO_MESSAGE)
+                parsed_args = None
+                return command_elements[0], parsed_args
 
     if command_elements[0] == 'add':
         parsed_args = add_parser(arguments)
@@ -162,6 +196,9 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
     elif command_elements[0] == 'search':
         parsed_args = search_parser(arguments)
         return command_elements[0], parsed_args
+    elif command_elements[0] == 'sort':
+        parsed_args = sort_parser(arguments)
+        return command_elements[0], parsed_args
     elif command_elements[0] == 'note':
         parsed_args = note_parser(arguments)
         return command_elements[0], parsed_args
@@ -169,7 +206,6 @@ def command_parser(user_command: str) -> tuple[str, argparse.Namespace | None]:
         print(f'Command [{command_elements[0]}] is not found!')
 
 def addressbook_controller(command: str, arguments: dict):
-    
     if command == 'add':
         add_contact(arguments.name, arguments.phone)
     elif command == 'change':
@@ -198,9 +234,24 @@ def addressbook_controller(command: str, arguments: dict):
     elif command == 'search':
         serch_contact(arguments.search)
         
+def sort_controller(arguments: str):
+    run_sorting_files(arguments)
+
+      
+def note_controller(arguments: dict):
+    if arguments.tag and arguments.replace and arguments.note:
+        edit_note(arguments.tag, arguments.replace, arguments.note)
+    elif arguments.add and arguments.note:
+        print(arguments.add)
+        add_note_to_data(arguments.add, arguments.note)
+    elif arguments.show == 'all':
+        show_all_notes()
+    elif arguments.delete:
+        delete_note(arguments.delete)
+    elif arguments.find:
+        find_note(arguments.find)
         
-def nete_controller(command: str, arguments: dict):
-    pass
+    
   
 
 def main() -> None:
@@ -208,22 +259,21 @@ def main() -> None:
     The main function of the program.
     """
     user_command = ' '.join(argv[1:])
-    info_message = 'Use command:\nadd\nchange\ndel\nshow\nsearch\n\nDetail about command:\n[command] -h'
     if not user_command or user_command == '-h':
-        print(info_message)
+        print(INFO_MESSAGE)
         return
     
     command, arguments = command_parser(user_command)
-    
-    print(command, arguments)
 
     if command in ADDRESSBOOK_COMMANDS and arguments:
         addressbook_controller(command, arguments)
+    elif command == 'sort' and arguments:
+        sort_controller(arguments.directory)
     elif command == 'note' and arguments:
-        pass
+        note_controller(arguments)
     else:
         print(f'Command *{command}* invalid or used without arguments! Try again or use help.')
-        print(info_message)
+        print(INFO_MESSAGE)
 
 
 if __name__ == '__main__':
