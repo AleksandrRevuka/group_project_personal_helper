@@ -13,7 +13,11 @@ from datetime import datetime
 from typing import Union, Any, List
 from collections import UserDict
 
-from personal_helper.entities import Phone, User, Email
+
+try:
+    from .entities import Phone, User, Email
+except ImportError:
+    from entities import Phone, User, Email
 
 
 class AddressBook(UserDict):

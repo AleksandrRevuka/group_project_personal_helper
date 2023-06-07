@@ -3,7 +3,10 @@ from collections import UserDict
 from pathlib import Path
 import pickle
 
-from personal_helper.constants import FILE_NOTES
+try:
+    from .constants import FILE_NOTES
+except ImportError:
+    from constants import FILE_NOTES
 
 
 class Notes(UserDict):
@@ -17,7 +20,7 @@ class Notes(UserDict):
         """
         The add_note function adds a note to the notes dictionary.
             The function takes two arguments: tags and text. Tags is a list of strings,
-            while text is a string. If there are no tags in the list, then it will add 
+            while text is a string. If there are no tags in the list, then it will add
             '#notag' as one of the keys for that note.
 
         :param self: Represent the instance of the object itself
@@ -26,18 +29,18 @@ class Notes(UserDict):
         """
         tags = tuple(tags)
         if len(tags) == 0:
-            tags = ('#notag',)
+            tags = ("#notag",)
             if tags not in self.data.keys():
                 self.data[tags] = text
-                print('Note added!')
+                print("Note added!")
                 return self.data
-            elif tags == ('#notag', ) and tags in self.data.keys():
+            elif tags == ("#notag",) and tags in self.data.keys():
                 counter = 1
                 while tags in self.data.keys():
-                    tags = tuple(['#notag' + str(counter)])
+                    tags = tuple(["#notag" + str(counter)])
                     counter += 1
                 self.data[tags] = text
-                print('Note added!')
+                print("Note added!")
                 return self.data
 
         for key in self.data.keys():
@@ -47,7 +50,7 @@ class Notes(UserDict):
                         print("New tag is already in notes. Note can't be added!")
                         return None
         self.data[tags] = text
-        print('Note added!')
+        print("Note added!")
         return self.data
 
     def find(self, key_word: str) -> None:
@@ -61,48 +64,52 @@ class Notes(UserDict):
         lst = []
         for key, value in self.data.items():
             for element in key:
-                if key_word in element and {key: value} not in lst or key_word in str(value) and {key: value} not in lst:
+                if (
+                    key_word in element
+                    and {key: value} not in lst
+                    or key_word in str(value)
+                    and {key: value} not in lst
+                ):
                     lst.append({key: value})
         if lst:
-            print('-' * 50)
+            print("-" * 50)
             print(f'Search result by parameter "{key_word}":')
-            print(("{:^15}|{:^50}".format('TAGS', 'TEXT')))
-            print('-' * 50)
+            print(("{:^15}|{:^50}".format("TAGS", "TEXT")))
+            print("-" * 50)
             for i in lst:
                 for key1, value1 in i.items():
-
-                    print("{:<15}|{:<50}".format(', '.join(key1), str(value1)))
-            print('-' * 50)
+                    print("{:<15}|{:<50}".format(", ".join(key1), str(value1)))
+            print("-" * 50)
         else:
-            print('-' * 50)
+            print("-" * 50)
             print(f'Nothing was found for parameter "{key_word}".')
 
     def show_all_sorted_notes(self) -> None:
         """
         The show_all_sorted_notes function prints out all the notes in a sorted order.
         The function takes one argument, self, which is an instance of the FileNotes class.
-        The function first prints out a line of dashes to separate it from other functions' output.  
-        Then it prints &quot;All notes:&quot; and then another line with column headers for tags and text.  
-        It then creates a list called lst_keys that contains all the keys (tags) in self's data dictionary 
-        as strings (the keys are tuples).  The list is sorted alphabetically using Python's built-in sort 
+        The function first prints out a line of dashes to separate it from other functions' output.
+        Then it prints &quot;All notes:&quot; and then another line with column headers for tags and text.
+        It then creates a list called lst_keys that contains all the keys (tags) in self's data dictionary
+        as strings (the keys are tuples).  The list is sorted alphabetically using Python's built-in sort
         method on lists, so that when we iterate through
 
         :param self: Represent the instance of the class
         """
-        print('-'*50)
+        print("-" * 50)
         print("All notes:")
-        print(("{:^15}|{:^50}".format('TAGS', 'TEXT')))
-        print('_'*50)
+        print(("{:^15}|{:^50}".format("TAGS", "TEXT")))
+        print("_" * 50)
         lst_keys = list(self.data)
         lst_keys.sort()
         for i in lst_keys:
-            print(("{:<15}|{:<50}".format(', '.join(i), self.data[i])))
-        print('-'*50)
+            print(("{:<15}|{:<50}".format(", ".join(i), self.data[i])))
+        print("-" * 50)
 
     def del_notes(self, tag: str) -> dict:
         """
         The del_notes function deletes a note from the notes dictionary.
-            It takes in a tag as an argument and searches for it in the keys of 
+            It takes in a tag as an argument and searches for it in the keys of
             the notes dictionary. If it finds one, then it deletes that key-value pair.
 
         :param self: Represent the instance of the class
@@ -122,11 +129,11 @@ class Notes(UserDict):
             print('Note with tag "' + tag + '" for deleting not found.')
         return self.data
 
-    def edit_notes(self, tag: str, new_tag: list, new_text: str = '') -> dict | None:
+    def edit_notes(self, tag: str, new_tag: list, new_text: str = "") -> dict | None:
         """
         The edit_notes function takes a tag, new_tag and new_text as arguments.
-        It searches for the tag in the notes dictionary and if it finds it, 
-        it deletes that note from the dictionary. Then it adds a new note with 
+        It searches for the tag in the notes dictionary and if it finds it,
+        it deletes that note from the dictionary. Then it adds a new note with
         the given tags and text to the dictionary.
 
         :param self: Represent the instance of the class
@@ -174,7 +181,7 @@ class Notes(UserDict):
         """
         The save function saves the data in a file.
         """
-        with open(FILE_NOTES, '+wb') as fh:
+        with open(FILE_NOTES, "+wb") as fh:
             pickle.dump(self.data, fh)
 
     def load(self) -> dict:
@@ -183,7 +190,7 @@ class Notes(UserDict):
         If the file does not exist, it will create one and return an empty dictionary.
         """
         if Path(FILE_NOTES).exists():
-            with open(FILE_NOTES, 'rb') as fh:
+            with open(FILE_NOTES, "rb") as fh:
                 self.data = pickle.load(fh)
                 return self.data
         else:
