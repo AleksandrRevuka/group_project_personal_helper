@@ -11,5 +11,5 @@ setup(
     authors = ['Oleksandr Revuka', 'Oleksandr Shevchenko' , 'Evgen Kulik', 'Roman Lomachinskiy', 'Oleksii Chaika', 'Artem Ivanina'],
     license='MIT',
     python_requires='>=3.11',
-    entry_points={'console_scripts': ['pbot = personal_helper.run_bot:start']}    
+    entry_points={'console_scripts': ['pbot = personal_helper.run_bot:main']}    
 )
