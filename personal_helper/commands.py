@@ -1,4 +1,54 @@
-"""..."""
+"""
+The main module consists of several functions that interact 
+with an address book. Here is a brief description of each function:
+
+load_contact_book(): This function loads the contact book from a file, creating an 
+empty contact book if the file doesn't exist.
+
+add_contact(contact_name: str, phone_number: str | None = None): This function adds 
+a contact to the phone book. It validates the contact name and phone number (if provided) 
+and saves the contact to the address book file.
+
+print_contact(contact_name: str): This function prints the contact information 
+of a given contact name, including phone number, email, birthday, and days to birthday.
+
+delete_contact(contact_name: str): This function deletes a contact from the address book.
+
+add_phone_number_to_contact(contact_name: str, phone_number: str): This function adds 
+a phone number to an existing contact. It validates the phone number and ensures it doesn't 
+already exist for the contact.
+
+change_phone_number_contact(contact_name: str, new_phone_number: str, old_phone_number: 
+str): This function changes the phone number of a contact. It validates the old and new 
+phone numbers and updates the contact accordingly.
+
+delete_phone_number_contact(contact_name: str, phone_number: str): This function deletes 
+a phone number from a contact.
+
+add_email_to_contact(contact_name: str, contact_email: str): This function adds an email 
+to a contact. It validates the email and ensures it doesn't already exist for the contact.
+
+change_email_contact(contact_name: str, contact_new_email: str, contact_old_email: str): 
+This function changes the email of a contact. It validates the old and new emails and 
+updates the contact accordingly.
+
+delete_email_contact(contact_name: str, contact_email: str): This function deletes an email 
+from a contact.
+
+add_birthday_to_contact(contact_name: str, birthday_date: str): This function adds a birthday 
+to a contact. It validates the birthday date and updates the contact accordingly.
+
+search_contact(criteria: str): This function searches for a contact in the address book based 
+on the specified criteria. It returns the matching contacts.
+
+print_contacts(addressbook: AB = None): This function prints all contacts in the address book. 
+If an address book is not provided, it loads the address book from the file.
+
+birthday_in_next_days(days_interval: str): This function checks for contacts with birthdays 
+in the next few days based on the specified days interval.
+
+"""
+
 import os.path
 from pathlib import Path
 
