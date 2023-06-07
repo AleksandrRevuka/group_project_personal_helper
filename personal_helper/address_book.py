@@ -153,7 +153,7 @@ class Record:
         for phone_number in self.phone_numbers:
             if phone_number.subrecord == old_phone_number:
                 phone_number.subrecord.phone = new_phone_number.phone
-                break
+                return None
 
     def change_email(self, old_email: Email, new_email: Email) -> None:
         """
@@ -162,7 +162,7 @@ class Record:
         for email in self.emails:
             if email.subrecord == old_email:
                 email.subrecord.email = new_email.email
-                break
+                return None
 
     def delete_phone_number(self, phone_number: Phone) -> None:
         """
@@ -171,7 +171,7 @@ class Record:
         for i, number in enumerate(self.phone_numbers):
             if number.subrecord == phone_number:
                 del self.phone_numbers[i]
-                break
+                return None
 
     def delete_email(self, del_email: Email) -> None:
         """
@@ -180,7 +180,7 @@ class Record:
         for i, email in enumerate(self.emails):
             if email.subrecord == del_email:
                 del self.emails[i]
-                break
+                return None
 
     def add_birthday(self, birthday_date: str) -> None:
         """
