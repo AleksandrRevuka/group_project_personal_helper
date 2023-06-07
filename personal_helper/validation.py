@@ -6,10 +6,16 @@ from datetime import datetime
 import os
 from pathlib import Path
 
-from .error import input_error
-from .constants import LETTERS, NAME_RANGE, PHONE_RANGE
-from .address_book import Record, AddressBook as AB
-from .entities import Phone, Email
+try:
+    from .error import input_error
+    from .constants import LETTERS, NAME_RANGE, PHONE_RANGE
+    from .address_book import Record, AddressBook as AB
+    from .entities import Phone, Email
+except ImportError:
+    from error import input_error
+    from constants import LETTERS, NAME_RANGE, PHONE_RANGE
+    from address_book import Record, AddressBook as AB
+    from entities import Phone, Email
 
 
 @input_error

@@ -1,28 +1,53 @@
 import os.path
 from pathlib import Path
 
-from .utils import sanitize_phone_number
-from .validation import (
-    name_validation,
-    phone_validation,
-    email_validation,
-    birthday_date_validation,
-    criteria_validation,
-    check_name_in_address_book,
-    check_name_not_in_address_book,
-    check_phone_number_in_address_book,
-    check_phone_number_not_in_address_book,
-    check_email_in_address_book,
-    check_email_not_in_address_book,
-    check_path_address_to_sort_files_in_it,
-    check_birthday_in_next_days,
-)
-from .constants import FILE
-from .address_book import Record, AddressBook as AB
-from .entities import Phone, User, Email
-from .print_table import TablePrinter
-from .sorting_files import SortingFiles
-from .notes import Notes
+try:
+    from .utils import sanitize_phone_number
+    from .validation import (
+        name_validation,
+        phone_validation,
+        email_validation,
+        birthday_date_validation,
+        criteria_validation,
+        check_name_in_address_book,
+        check_name_not_in_address_book,
+        check_phone_number_in_address_book,
+        check_phone_number_not_in_address_book,
+        check_email_in_address_book,
+        check_email_not_in_address_book,
+        check_path_address_to_sort_files_in_it,
+        check_birthday_in_next_days,
+    )
+    from .constants import FILE
+    from .address_book import Record, AddressBook as AB
+    from .entities import Phone, User, Email
+    from .print_table import TablePrinter
+    from .sorting_files import SortingFiles
+    from .notes import Notes
+
+except ImportError:
+    from utils import sanitize_phone_number
+    from validation import (
+        name_validation,
+        phone_validation,
+        email_validation,
+        birthday_date_validation,
+        criteria_validation,
+        check_name_in_address_book,
+        check_name_not_in_address_book,
+        check_phone_number_in_address_book,
+        check_phone_number_not_in_address_book,
+        check_email_in_address_book,
+        check_email_not_in_address_book,
+        check_path_address_to_sort_files_in_it,
+        check_birthday_in_next_days,
+    )
+    from constants import FILE
+    from address_book import Record, AddressBook as AB
+    from entities import Phone, User, Email
+    from print_table import TablePrinter
+    from sorting_files import SortingFiles
+    from notes import Notes
 
 
 def load_contact_book() -> AB:

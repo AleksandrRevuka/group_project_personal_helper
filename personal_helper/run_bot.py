@@ -18,30 +18,55 @@ For more information about each command, use the -h option after the command nam
 import argparse
 from sys import argv
 
-from .constants import ADDRESSBOOK_COMMANDS, LIST_COMMANDS, INFO_MESSAGE
+try:
+    from .constants import ADDRESSBOOK_COMMANDS, LIST_COMMANDS, INFO_MESSAGE
+    from .commands import (
+        add_contact,
+        add_phone_number_to_contact,
+        change_phone_number_contact,
+        add_email_to_contact,
+        change_email_contact,
+        add_birthday_to_contact,
+        delete_phone_number_contact,
+        delete_email_contact,
+        delete_contact,
+        print_contacts,
+        print_contact,
+        serch_contact,
+        run_sorting_files,
+        edit_note,
+        delete_note,
+        show_all_notes,
+        find_note,
+        add_note_to_data,
+        birthday_in_next_days,
+    )
+    from .utils import transformation_commands, get_close_command
 
-from .commands import (
-    add_contact,
-    add_phone_number_to_contact,
-    change_phone_number_contact,
-    add_email_to_contact,
-    change_email_contact,
-    add_birthday_to_contact,
-    delete_phone_number_contact,
-    delete_email_contact,
-    delete_contact,
-    print_contacts,
-    print_contact,
-    serch_contact,
-    run_sorting_files,
-    edit_note,
-    delete_note,
-    show_all_notes,
-    find_note,
-    add_note_to_data,
-    birthday_in_next_days,
-)
-from .utils import transformation_commands, get_close_command
+except ImportError:
+    from constants import ADDRESSBOOK_COMMANDS, LIST_COMMANDS, INFO_MESSAGE
+    from commands import (
+        add_contact,
+        add_phone_number_to_contact,
+        change_phone_number_contact,
+        add_email_to_contact,
+        change_email_contact,
+        add_birthday_to_contact,
+        delete_phone_number_contact,
+        delete_email_contact,
+        delete_contact,
+        print_contacts,
+        print_contact,
+        serch_contact,
+        run_sorting_files,
+        edit_note,
+        delete_note,
+        show_all_notes,
+        find_note,
+        add_note_to_data,
+        birthday_in_next_days,
+    )
+    from utils import transformation_commands, get_close_command
 
 
 def add_parser(arguments: str) -> argparse.Namespace:

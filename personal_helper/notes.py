@@ -3,7 +3,10 @@ from collections import UserDict
 from pathlib import Path
 import pickle
 
-from .constants import FILE_NOTES
+try:
+    from .constants import FILE_NOTES
+except ImportError:
+    from constants import FILE_NOTES
 
 
 class Notes(UserDict):
