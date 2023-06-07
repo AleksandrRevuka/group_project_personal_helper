@@ -1,28 +1,53 @@
 import os.path
 from pathlib import Path
 
-from utils import sanitize_phone_number
-from validation import (
-    name_validation,
-    phone_validation,
-    email_validation,
-    birthday_date_validation,
-    criteria_validation,
-    check_name_in_address_book,
-    check_name_not_in_address_book,
-    check_phone_number_in_address_book,
-    check_phone_number_not_in_address_book,
-    check_email_in_address_book,
-    check_email_not_in_address_book,
-    check_path_address_to_sort_files_in_it,
-    check_birthday_in_next_days
-)
-from constants import FILE
-from address_book import Record, AddressBook as AB
-from entities import Phone, User, Email
-from print_table import TablePrinter
-from sorting_files import SortingFiles
-from notes import Notes
+try:
+    from .utils import sanitize_phone_number
+    from .validation import (
+        name_validation,
+        phone_validation,
+        email_validation,
+        birthday_date_validation,
+        criteria_validation,
+        check_name_in_address_book,
+        check_name_not_in_address_book,
+        check_phone_number_in_address_book,
+        check_phone_number_not_in_address_book,
+        check_email_in_address_book,
+        check_email_not_in_address_book,
+        check_path_address_to_sort_files_in_it,
+        check_birthday_in_next_days,
+    )
+    from .constants import FILE
+    from .address_book import Record, AddressBook as AB
+    from .entities import Phone, User, Email
+    from .print_table import TablePrinter
+    from .sorting_files import SortingFiles
+    from .notes import Notes
+
+except ImportError:
+    from utils import sanitize_phone_number
+    from validation import (
+        name_validation,
+        phone_validation,
+        email_validation,
+        birthday_date_validation,
+        criteria_validation,
+        check_name_in_address_book,
+        check_name_not_in_address_book,
+        check_phone_number_in_address_book,
+        check_phone_number_not_in_address_book,
+        check_email_in_address_book,
+        check_email_not_in_address_book,
+        check_path_address_to_sort_files_in_it,
+        check_birthday_in_next_days,
+    )
+    from constants import FILE
+    from address_book import Record, AddressBook as AB
+    from entities import Phone, User, Email
+    from print_table import TablePrinter
+    from sorting_files import SortingFiles
+    from notes import Notes
 
 
 def load_contact_book() -> AB:
@@ -383,9 +408,9 @@ def birthday_in_next_days(days_interval: str) -> None:
     """
     The birthday_in_next_days function takes a string as an argument and returns None.
     The function checks if the input is valid, then loads the address book from file.
-    It iterates through each contact in the address book and checks if they have a birthday date set. If so, 
-    it calculates how many days are left until their birthday using days_to_birthday() method of User class. 
-    If this number is less than or equal to user's input (days interval), it adds that contact to 
+    It iterates through each contact in the address book and checks if they have a birthday date set. If so,
+    it calculates how many days are left until their birthday using days_to_birthday() method of User class.
+    If this number is less than or equal to user's input (days interval), it adds that contact to
     contacts_with_birthday dictionary which will be printed at the end.
 
     :param days_interval: str: Specify the number of days from today to search for birthdays
@@ -411,7 +436,7 @@ def run_sorting_files(address: str) -> None:
     """
     The run_sorting_files function sorts files in a given directory.
         It takes the address of the directory as an argument and returns None.
-        The function checks if the path is valid, creates an instance of SortingFiles class, 
+        The function checks if the path is valid, creates an instance of SortingFiles class,
         calls its methods to sort files by their extensions and remove empty folders.
 
     :param address: str: Get the address of the directory that we want to sort
@@ -424,10 +449,10 @@ def run_sorting_files(address: str) -> None:
     sorting_files.sort_extensions()
     sorting_files.removing_files()
     sorting_files.del_empty_folders()
-    print(f'Directory {address} has been sorted succesfully!')
+    print(f"Directory {address} has been sorted succesfully!")
 
 
-def add_note_to_data(tags: list, text: str = '') -> None:
+def add_note_to_data(tags: list, text: str = "") -> None:
     """
     The add_note_to_data function adds notes with tags. If no tag is specified, a default tag is assigned
 
@@ -440,7 +465,7 @@ def add_note_to_data(tags: list, text: str = '') -> None:
     note.save()
 
 
-def find_note(key_word: str = '') -> None:
+def find_note(key_word: str = "") -> None:
     """
     The find_note function searches for a note by keyword/letter/symbol.
     The search is conducted by tags and by the text of the notes at the same time.
@@ -450,7 +475,7 @@ def find_note(key_word: str = '') -> None:
     note = Notes()
     note.load()
     note.find(key_word)
-    print('The search is over!')
+    print("The search is over!")
 
 
 def show_all_notes() -> None:
@@ -483,7 +508,7 @@ def edit_note(tag: str, new_tag: list, new_text: str) -> None:
     """
     The edit_note function allows the user to edit a note.
     The function takes in three parameters: tag, new_tag, and new_text.
-    Tag is the name of the note that will be edited. New_tag is a list of tags that will replace old ones for this note. 
+    Tag is the name of the note that will be edited. New_tag is a list of tags that will replace old ones for this note.
     New text is what replaces old text for this note.
 
     :param tag: str: Find the note that is to be edited
