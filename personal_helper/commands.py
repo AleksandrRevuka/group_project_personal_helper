@@ -1,8 +1,9 @@
+"""..."""
 import os.path
 from pathlib import Path
 
-from utils import sanitize_phone_number
-from validation import (
+from personal_helper.utils import sanitize_phone_number
+from personal_helper.validation import (
     name_validation,
     phone_validation,
     email_validation,
@@ -17,13 +18,12 @@ from validation import (
     check_path_address_to_sort_files_in_it,
     check_birthday_in_next_days
 )
-from constants import FILE
-from address_book import Record, AddressBook as AB
-from entities import Phone, User, Email
-from print_table import TablePrinter
-from sorting_files import SortingFiles
-from notes import Notes
-
+from personal_helper.constants import FILE
+from personal_helper.address_book import Record, AddressBook as AB
+from personal_helper.entities import Phone, User, Email
+from personal_helper.print_table import TablePrinter
+from personal_helper.sorting_files import SortingFiles
+from personal_helper.notes import Notes
 
 def load_contact_book() -> AB:
     """

@@ -17,6 +17,12 @@ For more information about each command, use the -h option after the command nam
 
 import argparse
 from sys import argv
+import os.path
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(os.path.dirname(current_dir))
+sys.path.append(root_dir)
 
 from constants import (
     ADDRESSBOOK_COMMANDS,
@@ -24,7 +30,7 @@ from constants import (
     INFO_MESSAGE
 )
 
-from commands import (
+from personal_helper.commands import (
     add_contact,
     add_phone_number_to_contact,
     change_phone_number_contact,
@@ -45,7 +51,7 @@ from commands import (
     add_note_to_data,
     birthday_in_next_days
 )
-from utils import transformation_commands, get_close_command
+from personal_helper.utils import transformation_commands, get_close_command
 
 
 def add_parser(arguments: str) -> argparse.Namespace:
