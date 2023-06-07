@@ -17,12 +17,6 @@ For more information about each command, use the -h option after the command nam
 
 import argparse
 from sys import argv
-import os.path
-import sys
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(os.path.dirname(current_dir))
-sys.path.append(root_dir)
 
 try:
     from .constants import ADDRESSBOOK_COMMANDS, LIST_COMMANDS, INFO_MESSAGE
