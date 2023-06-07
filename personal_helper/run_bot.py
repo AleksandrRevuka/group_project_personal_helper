@@ -24,7 +24,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(root_dir)
 
-from constants import (
+from personal_helper.constants import (
     ADDRESSBOOK_COMMANDS,
     LIST_COMMANDS,
     INFO_MESSAGE
