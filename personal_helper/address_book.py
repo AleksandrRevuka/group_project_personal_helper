@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import Union, Any, List
 from collections import UserDict
 
+
 try:
     from .entities import Phone, User, Email
 except ImportError:
